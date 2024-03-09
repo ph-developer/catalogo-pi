@@ -1,0 +1,24 @@
+{
+    "name": "Vite React",
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "service": "vite",
+    "workspaceFolder": "/app",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vivaxy.vscode-conventional-commits",
+                "ms-azuretools.vscode-docker",
+                "eamodio.gitlens",
+                "antfu.vite",
+                "dbaeumer.vscode-eslint",
+                "dsznajder.es7-react-js-snippets",
+                "planbcoding.vscode-react-refactor",
+                "wix.vscode-import-cost",
+                "burkeholland.simple-react-snippets",
+                "antfu.browse-lite"
+            ]
+        }
+    }
+  }

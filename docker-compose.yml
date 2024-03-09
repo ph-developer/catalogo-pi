@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  vite:
+    container_name: vite
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    volumes:
+      - ./:/app
+    tty: true
