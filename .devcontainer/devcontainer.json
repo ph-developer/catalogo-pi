@@ -1,9 +1,9 @@
 {
     "name": "Vite React",
     "dockerComposeFile": [
-        "../docker-compose.yml"
+        "../.docker/docker-compose.yml"
     ],
-    "service": "vite",
+    "service": "app",
     "workspaceFolder": "/app",
     "customizations": {
         "vscode": {
