@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-
+import {catalogLoader} from '@/loaders/catalog-loader'
 
 export const router = createBrowserRouter([
     {
@@ -13,6 +13,13 @@ export const router = createBrowserRouter([
                 lazy: async () => ({
                     Component: (await import('@/components/pages/HomePage')).default
                 }),
+            },
+            {
+                path: ':catalogName',
+                loader: catalogLoader,
+                lazy: async () => ({
+                    Component: (await import('@/components/pages/CatalogPage')).default
+                })
             }
         ]
     },

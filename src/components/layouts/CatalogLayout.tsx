@@ -9,27 +9,30 @@ const CatalogLayout = () => {
 
     return (
         <>
-            <header className='sticky top-0 z-50 w-full p-2 flex items-center border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
-                <div className="flex items-center space-x-2">
-                    <SelectLocationDialog onChangeCity={setCity}>
-                        <Button variant="ghost">
-                            <Icons.mapPin className='h-4 w-4 mr-2' />
-                            {city || 'Selecionar Cidade'}
-                        </Button>
-                    </SelectLocationDialog>
-                </div>
-                <div className="ml-auto flex items-center space-x-2">
-                    <Button variant="ghost" className='ml-auto' asChild>
-                        <Link to='/login'>
-                            <Icons.login className='h-4 w-4 mr-2' />
-                            Entrar
+            <header className='sticky top-0 z-50 py-2 border-b bg-white'>
+                <div className="flex w-full items-center container">                    
+                    <div className="flex items-center space-x-2 ml-2">        
+                        <Link to='/'>
+                            <Icons.logo className="stroke-indigo-500 w-6 h-6" />
                         </Link>
-                    </Button>
+                    </div>
+                    <div className="ml-auto flex items-center space-x-2 mr-2">
+                        <SelectLocationDialog onChangeCity={setCity}>
+                            <Button className="p-2" variant="ghost">
+                                <Icons.mapPin className='h-4 w-4 mr-2' />
+                                {city || 'Selecionar Cidade'}
+                            </Button>
+                        </SelectLocationDialog>
+                        <Button variant="ghost" className='ml-auto' asChild>
+                            <Link to='/login'>
+                                <Icons.login className='h-4 w-4 mr-2' />
+                                Entrar
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
             </header>
-            <section className='p-2'>
-                <Outlet />
-            </section>
+            <Outlet />
         </>
     )
 }
