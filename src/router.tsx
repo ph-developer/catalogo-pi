@@ -11,7 +11,7 @@ export const router = createBrowserRouter([
             {
                 path: '',
                 lazy: async () => ({
-                    Component: (await import('@/components/pages/Home')).default
+                    Component: (await import('@/components/pages/HomePage')).default
                 }),
             }
         ]
@@ -25,7 +25,7 @@ export const router = createBrowserRouter([
             {
                 path: '',
                 lazy: async () => ({
-                    Component: (await import('@/components/pages/Login')).default
+                    Component: (await import('@/components/pages/LoginPage')).default
                 })
             },
         ]
@@ -39,7 +39,7 @@ export const router = createBrowserRouter([
             {
                 path: '',
                 lazy: async () => ({
-                    Component: (await import('@/components/pages/Painel')).default
+                    Component: (await import('@/components/pages/PainelPage')).default
                 }),
             }
         ]

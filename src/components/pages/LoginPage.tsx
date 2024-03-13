@@ -8,7 +8,7 @@ import { auth } from "@/lib/firebase"
 import { Link, useNavigate } from "react-router-dom"
 import { useNotifications } from '@/hooks/use-notifications'
 
-const Login = () => {
+const LoginPage = () => {
     const navigate = useNavigate()
     const { notifyError } = useNotifications()
     const [email, setEmail] = useState<string>('')
@@ -67,4 +67,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default LoginPage
