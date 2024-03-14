@@ -29,7 +29,7 @@ const AuthLayout = () => {
             <header className='sticky top-0 z-50 py-2 border-b bg-white'>
                 <div className="flex w-full items-center container">
                     <div className="flex items-center space-x-2 ml-2">
-                        <Link to='/painel'>
+                        <Link to='/dash'>
                             <Icons.logo className="stroke-indigo-500 w-6 h-6" />
                         </Link>
                     </div>

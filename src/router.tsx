@@ -38,7 +38,7 @@ export const router = createBrowserRouter([
         ]
     },
     {
-        path: '/painel',
+        path: '/dash',
         lazy: async () => ({
             Component: (await import('@/components/layouts/AuthLayout')).default
         }),
@@ -46,7 +46,7 @@ export const router = createBrowserRouter([
             {
                 path: '',
                 lazy: async () => ({
-                    Component: (await import('@/components/pages/PainelPage')).default
+                    Component: (await import('@/components/pages/DashboardPage')).default
                 }),
             }
         ]

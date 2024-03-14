@@ -25,8 +25,8 @@ const CatalogLayout = () => {
                         </SelectLocationDialog>
                         <Button variant="ghost" className='ml-auto' asChild>
                             <Link to='/login'>
-                                <Icons.login className='h-4 w-4 mr-2' />
-                                Entrar
+                                <Icons.dash className='h-4 w-4 mr-2' />
+                                Dashboard
                             </Link>
                         </Button>
                     </div>

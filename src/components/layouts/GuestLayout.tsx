@@ -15,7 +15,7 @@ const GuestLayout = () => {
     }, [])
 
     if (isLoading) return <div />
-    if (isAuth) return <Navigate to='/painel' />
+    if (isAuth) return <Navigate to='/dash' />
 
     return <Outlet />
 }

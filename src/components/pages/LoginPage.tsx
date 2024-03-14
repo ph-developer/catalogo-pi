@@ -33,7 +33,7 @@ const LoginPage = () => {
         setIsLoading(true)
         try {
             await signInWithEmailAndPassword(auth, email, password)
-            navigate('/painel')
+            navigate('/dash')
         } catch (error) {
             notifyError('Credenciais inválidas.')
             setIsLoading(false)
