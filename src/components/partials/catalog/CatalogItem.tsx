@@ -1,18 +1,17 @@
 import { Product } from "@/types/product"
-import { Category } from "@/types/category"
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card"
 import { Badge } from '@/components/ui/badge'
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, CarouselApi } from '@/components/ui/carousel'
 import { useMount } from '@/hooks/use-mount'
 import { useEffect, useState } from "react"
-import { FirebaseLazyLoadImg } from '@/components/ui/firebase-lazy-load-img'
+import { LazyLoadImg } from '@/components/ui/lazy-load-img.tsx'
+import {storageRepository} from "@/repositories/storage-repository.ts";
 
 interface Props {
-    product: Product,
-    categories: Category[]
+    product: Product
 }
 
-export const CatalogItem = ({ product, categories }: Props) => {
+export const CatalogItem = ({ product }: Props) => {
     const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null)
     const [currentImg, setCurrentImg] = useState<number | null>(null)
     const [imgLoadedCount, setImgLoadedCount] = useState<number>(0)
@@ -41,8 +40,8 @@ export const CatalogItem = ({ product, categories }: Props) => {
                         <CarouselContent>
                             {product.photos.map((photoId) => (
                                 <CarouselItem key={photoId}>
-                                    <FirebaseLazyLoadImg
-                                        path={`products/${photoId}`}
+                                    <LazyLoadImg
+                                        imgSrc={() => storageRepository.getProductPhotoSrc(photoId)}
                                         onIsLoaded={incImgLoadedCount}
                                         className="h-44 w-40 rounded-xl object-cover"
                                     />
@@ -67,7 +66,7 @@ export const CatalogItem = ({ product, categories }: Props) => {
                         {product.description}
                     </CardDescription>
                     <div className="flex flex-wrap">
-                        {categories.map((category) => (
+                        {product.categories?.map((category) => (
                             <Badge key={`${product.id}_${category.id}`} className="mb-1 mr-1 select-none">
                                 {category.name}
                             </Badge>

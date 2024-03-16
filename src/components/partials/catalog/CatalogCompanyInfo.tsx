@@ -25,9 +25,7 @@ export const CatalogCompanyInfo = ({ catalog }: Props) => {
             </div>
             <div>
                 <span className="font-medium">Endereço: </span>
-                <span>{catalog.address}, </span>
-                <span>{catalog.city}/{catalog.state}, </span>
-                <span>{catalog.country}</span>
+                <span>{catalog.address}</span>
             </div>
             <div className="flex items-center">
                 <span className="font-medium pr-1">Whatsapp:</span>

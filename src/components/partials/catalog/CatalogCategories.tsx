@@ -21,7 +21,7 @@ export const CatalogCategories = ({ categories, products, onCategoryClick }: Pro
                 >
                     {category.name} ({
                         products
-                            .filter((p) => p.categories.includes(category.id))
+                            .filter((p) => p.categoryIds.includes(category.id))
                             .length
                     })
                 </p>

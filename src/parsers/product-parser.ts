@@ -10,5 +10,6 @@ export const productParser = {
         description: doc.get('description'),
         categories: doc.get('categories'),
         photos: doc.get('photos'),
+        categoryIds: doc.get('categoryIds'),
     })
 }

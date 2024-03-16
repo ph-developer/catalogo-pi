@@ -3,10 +3,18 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from "@/components/ui/button"
 import { FormEventHandler, useState } from "react"
-import { signInWithEmailAndPassword } from "firebase/auth"
-import { auth } from "@/lib/firebase"
 import { Link, useNavigate } from "react-router-dom"
 import { useNotifications } from '@/hooks/use-notifications'
+import {authRepository} from "@/repositories/auth-repository.ts";
+import {z} from "zod";
+
+const formSchema = z.object({
+    email: z.string()
+        .min(1, 'O campo email é obrigatório.')
+        .email('O campo email deve possuir um formato válido.'),
+    password: z.string()
+        .min(1, 'O campo senha é obrigatório.')
+})
 
 const LoginPage = () => {
     const navigate = useNavigate()
@@ -16,14 +24,13 @@ const LoginPage = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const validate = () => {
-        const errors = []
-        if (!email) errors.push('O campo email é obrigatório.')
-        if (!password) errors.push('O campo senha é obrigatório.')
-        if (errors.length) {
-            notifyError(errors)
-            return false
+        const result = formSchema.safeParse({email, password})
+
+        if (!result.success) {
+            notifyError(result.error.issues.map((issue) => issue.message))
         }
-        return true
+
+        return result.success
     }
 
     const doLogin: FormEventHandler = async (e) => {
@@ -32,7 +39,7 @@ const LoginPage = () => {
 
         setIsLoading(true)
         try {
-            await signInWithEmailAndPassword(auth, email, password)
+            await authRepository.login(email, password)
             navigate('/dash')
         } catch (error) {
             notifyError('Credenciais inválidas.')
