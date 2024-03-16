@@ -21,16 +21,18 @@ const CatalogsPage = () => {
     const navigate = useNavigate()
     const {notifySuccess} = useNotifications()
 
-    const saveCatalog = async (old: Catalog, catalog: Catalog) => {
+    const saveCatalog = async (old: Catalog|null, catalog: Catalog) => {
         await catalogRepository.upsertCatalog(old, catalog)
         notifySuccess('Catálogo ' + (old ? 'atualizado.' : 'criado.'))
         navigate(0) // TODO: remove refresh
     }
 
     const deleteCatalog = async (catalog: Catalog) => {
-        await catalogRepository.deleteCatalog(catalog.id)
-        notifySuccess('Catálogo excluído.')
-        navigate(0) // TODO: remove refresh
+        if (catalog.id) {
+            await catalogRepository.deleteCatalog(catalog.id)
+            notifySuccess('Catálogo excluído.')
+            navigate(0) // TODO: remove refresh
+        }
     }
 
     return (
@@ -92,7 +94,7 @@ const CatalogsPage = () => {
                                                         <LazyLoadImg
                                                             // TODO: replace with modal
                                                             className="object-contain h-48 w-48"
-                                                            imgSrc={() => storageRepository.getBannerPhotoSrc(catalog.banner)}
+                                                            imgSrc={() => storageRepository.getBannerPhotoSrc(catalog.banner!)}
                                                         />
                                                     </TooltipContent>
                                                 </Tooltip>

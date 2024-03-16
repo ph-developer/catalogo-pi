@@ -107,7 +107,7 @@ export const catalogRepository = {
         delete catalog.id
         await setDoc(catalogRef, catalog)
     },
-    upsertCatalog: async (old: Catalog, catalog: Catalog): Promise<void> => {
+    upsertCatalog: async (old: Catalog|null, catalog: Catalog): Promise<void> => {
         catalog.banner = await storageRepository.replaceBanner(old?.banner || null, catalog.banner)
         if (catalog.id) {
             await catalogRepository.updateCatalog(catalog)
