@@ -12,7 +12,7 @@ export const CatalogCompanyBanner = ({ catalog }: Props) => {
     return (
         <div className="flex justify-center">
             <LazyLoadImg
-                className="max-w-64"
+                className="rounded-lg"
                 imgSrc={() => storageRepository.getBannerPhotoSrc(catalog.banner!)}
             />
         </div>
