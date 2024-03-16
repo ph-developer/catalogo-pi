@@ -58,10 +58,10 @@ const CatalogPage = () => {
                         />
                     )}
 
-                    {!!catalog.categories.length && (
+                    {!!catalog.categories?.length && (
                         <CatalogCategories
                             products={filteredProducts}
-                            categories={catalog?.categories || []}
+                            categories={catalog.categories}
                             onCategoryClick={addCategoryFilter}
                         />
                     )}
