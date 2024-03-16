@@ -7,6 +7,7 @@ import {useMemo, useState} from "react"
 import {Category} from "@/types/category"
 import {CatalogNotFound} from "@/components/partials/catalog/CatalogNotFound.tsx"
 import {CatalogCategoryFilters} from "@/components/partials/catalog/CatalogCategoryFilters.tsx"
+import {CatalogCompanyBanner} from "@/components/partials/catalog/CatalogCompanyBanner.tsx";
 
 const CatalogPage = () => {
     const catalog = useLoaderData() as Catalog | null
@@ -40,6 +41,12 @@ const CatalogPage = () => {
         <section className="bg-slate-50" style={{height: 'calc(100vh - 53px)'}}>
             <div className="flex pt-6 container mx-auto">
                 <div className="columns-xs min-w-64 p-2 space-y-6">
+                    {!!catalog.banner && (
+                        <CatalogCompanyBanner
+                            catalog={catalog}
+                        />
+                    )}
+
                     <CatalogCompanyInfo catalog={catalog}/>
 
                     {!!categoryFilterIds.length && (
