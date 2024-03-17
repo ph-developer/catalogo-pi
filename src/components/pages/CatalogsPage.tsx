@@ -15,6 +15,7 @@ import {catalogRepository} from "@/repositories/catalog-repository.ts";
 import {useNotifications} from "@/hooks/use-notifications.tsx";
 import {storageRepository} from "@/repositories/storage-repository.ts";
 import {ImgDialog} from "@/components/dialogs/ImgDialog.tsx";
+import {UrlQrCodeDialog} from "@/components/dialogs/UrlQrCodeDialog.tsx";
 
 const CatalogsPage = () => {
     const catalogs = useLoaderData() as Catalog[]
@@ -88,6 +89,22 @@ const CatalogsPage = () => {
                                                     </TooltipTrigger>
                                                     <TooltipContent>
                                                         <p>Abrir "{catalog.url}"</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <div className="mt-1">
+                                                            <UrlQrCodeDialog url={catalog.url}>
+                                                                <Icons.qrCode
+                                                                    className="w-3.5 h-3.5 cursor-pointer stroke-primary"
+                                                                />
+                                                            </UrlQrCodeDialog>
+                                                        </div>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>QR Code</p>
                                                     </TooltipContent>
                                                 </Tooltip>
                                             </TooltipProvider>
