@@ -61,7 +61,7 @@ const AuthLayout = () => {
                                 {catalogs.length > 0 && <DropdownMenuSeparator/>}
                                 {catalogs.map((catalog) => (
                                     <DropdownMenuItem key={`manu_${catalog.id}`} asChild>
-                                        <Link className="cursor-pointer" to={`/dash/catalogs/${catalog.name}`}>
+                                        <Link className="cursor-pointer" to={`/dash/catalogs/${catalog.url}`}>
                                             {catalog.name}
                                         </Link>
                                     </DropdownMenuItem>
