@@ -4,7 +4,7 @@ import {Icons} from "@/components/ui/icons"
 import {colors} from "@/lib/colors.ts";
 import {Catalog} from "@/types/catalog";
 
-const CatalogLayout = () => {
+const PublicLayout = () => {
     const catalog = useLoaderData() as Catalog | null
 
     return (
@@ -38,4 +38,4 @@ const CatalogLayout = () => {
     )
 }
 
-export default CatalogLayout
+export default PublicLayout

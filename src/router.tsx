@@ -7,7 +7,7 @@ export const router = createBrowserRouter([
         path: '/',
         loader: catalogLoader,
         lazy: async () => ({
-            Component: (await import('@/components/layouts/CatalogLayout')).default
+            Component: (await import('@/components/layouts/PublicLayout.tsx')).PublicLayout
         }),
         children: [
             {
