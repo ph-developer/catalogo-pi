@@ -1,5 +1,6 @@
 import {LoaderFunction, LoaderFunctionArgs} from "react-router-dom"
 import {catalogRepository} from "@/repositories/catalog-repository.ts";
+import {colors} from "@/lib/colors.ts";
 
 interface Args {
     catalogName: string
@@ -10,5 +11,11 @@ export const catalogLoader: LoaderFunction = async ({params}: LoaderFunctionArgs
 
     if (!catalogName) return null
 
-    return catalogRepository.getCatalogByName(catalogName, ['categories', 'products'])
+    const catalog = await catalogRepository.getCatalogByName(catalogName, ['categories', 'products'])
+
+    if (catalog?.bannerDominantColor) {
+        colors.setBackgroundColor(catalog.bannerDominantColor)
+    }
+
+    return catalog
 }

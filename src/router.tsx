@@ -5,6 +5,7 @@ import {catalogsLoader} from "@/loaders/catalogs-loader.ts";
 export const router = createBrowserRouter([
     {
         path: '/',
+        loader: catalogLoader,
         lazy: async () => ({
             Component: (await import('@/components/layouts/CatalogLayout')).default
         }),

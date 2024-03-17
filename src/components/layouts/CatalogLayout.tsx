@@ -1,15 +1,22 @@
 import {useState} from "react"
-import {Link, Outlet} from "react-router-dom"
+import {Link, Outlet, useLoaderData} from "react-router-dom"
 import {Button} from "@/components/ui/button"
 import {Icons} from "@/components/ui/icons"
 import {SelectLocationDialog} from "@/components/dialogs/SelectLocationDialog.tsx"
+import {colors} from "@/lib/colors.ts";
+import {Catalog} from "@/types/catalog";
 
 const CatalogLayout = () => {
+    const catalog = useLoaderData() as Catalog | null
     const [city, setCity] = useState<string | null>(null)
 
     return (
         <>
-            <header className='sticky top-0 z-50 py-2 border-b bg-white shadow-sm'>
+            <header className='sticky top-0 z-50 py-2 border-b bg-white shadow-sm' style={catalog?.bannerDominantColor ? {
+                backgroundColor: colors.getDarkenColor(catalog.bannerDominantColor, 2.5),
+                color: colors.getTextColor(catalog.bannerDominantColor),
+                borderBottomColor: colors.getDarkenColor(catalog.bannerDominantColor, 4)
+            } : {}}>
                 <div className="flex w-full items-center container">
                     <div className="flex items-center space-x-2 ml-2">
                         <Link to='/'>

@@ -2,6 +2,7 @@ import { Icons } from "@/components/ui/icons"
 import { Catalog } from "@/types/catalog"
 import { makeWhatsappUrl } from '@/lib/whatsapp'
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip'
+import {colors} from "@/lib/colors.ts";
 
 interface Props {
     catalog: Catalog
@@ -14,7 +15,9 @@ export const CatalogCompanyInfo = ({ catalog }: Props) => {
     }
 
     return (
-        <div className="text-justify space-y-1 text-sm">
+        <div className="text-justify space-y-1 text-sm" style={catalog?.bannerDominantColor ? {
+            color: colors.getTextColor(catalog.bannerDominantColor),
+        } : {}}>
             <div>
                 <span className="font-medium">Empresa: </span>
                 <span>{catalog.company}</span>

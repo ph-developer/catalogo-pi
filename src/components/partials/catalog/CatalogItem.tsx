@@ -1,17 +1,20 @@
 import { Product } from "@/types/product"
-import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Badge } from '@/components/ui/badge'
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, CarouselApi } from '@/components/ui/carousel'
 import { useMount } from '@/hooks/use-mount'
 import { useEffect, useState } from "react"
 import { LazyLoadImg } from '@/components/ui/lazy-load-img.tsx'
 import {storageRepository} from "@/repositories/storage-repository.ts";
+import {colors} from "@/lib/colors.ts";
+import {Catalog} from "@/types/catalog";
 
 interface Props {
+    catalog: Catalog
     product: Product
 }
 
-export const CatalogItem = ({ product }: Props) => {
+export const CatalogItem = ({ catalog, product }: Props) => {
     const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null)
     const [currentImg, setCurrentImg] = useState<number | null>(null)
     const [imgLoadedCount, setImgLoadedCount] = useState<number>(0)
@@ -33,7 +36,11 @@ export const CatalogItem = ({ product }: Props) => {
     }
 
     return (
-        <Card className="w-auto mx-2 mt-2">
+        <Card className="w-auto mx-2 mt-2" style={catalog?.bannerDominantColor ? {
+            backgroundColor: colors.getDarkenColor(catalog.bannerDominantColor, 2.5),
+            color: colors.getTextColor(catalog.bannerDominantColor),
+            borderColor: colors.getDarkenColor(catalog.bannerDominantColor, 4)
+        } : {}}>
             <CardContent className="flex p-6 space-x-6">
                 <div className="min-w-40 w-40">
                     <Carousel setApi={setCarouselApi}>
@@ -51,10 +58,10 @@ export const CatalogItem = ({ product }: Props) => {
                         {product.photos.length > 1 && imgLoadedCount === product.photos.length && (
                             <>
                                 {currentImg !== 0 && (
-                                    <CarouselPrevious className="left-1 w-4 h-4 opacity-50" />
+                                    <CarouselPrevious className="left-1 w-4 h-4 opacity-50 text-black" />
                                 )}
                                 {currentImg !== product.photos.length - 1 && (
-                                    <CarouselNext className="right-1 w-4 h-4 opacity-50" />
+                                    <CarouselNext className="right-1 w-4 h-4 opacity-50 text-black" />
                                 )}
                             </>
                         )}
@@ -62,9 +69,9 @@ export const CatalogItem = ({ product }: Props) => {
                 </div>
                 <div className="flex flex-col flex-auto space-y-6">
                     <CardTitle>{product.name}</CardTitle>
-                    <CardDescription className="min-h-20 line-clamp-4 text-justify">
+                    <p className="text-sm min-h-20 line-clamp-4 text-justify">
                         {product.description}
-                    </CardDescription>
+                    </p>
                     <div className="flex flex-wrap">
                         {product.categories?.map((category) => (
                             <Badge key={`${product.id}_${category.id}`} className="mb-1 mr-1 select-none">

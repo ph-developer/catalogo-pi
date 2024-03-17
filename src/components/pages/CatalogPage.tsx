@@ -51,6 +51,7 @@ const CatalogPage = () => {
 
                     {!!categoryFilterIds.length && (
                         <CatalogCategoryFilters
+                            catalog={catalog}
                             categories={catalog.categories?.filter(
                                 (c) => categoryFilterIds.includes(c.id)
                             ) || []}
@@ -60,6 +61,7 @@ const CatalogPage = () => {
 
                     {!!catalog.categories?.length && (
                         <CatalogCategories
+                            catalog={catalog}
                             products={filteredProducts}
                             categories={catalog.categories}
                             onCategoryClick={addCategoryFilter}
@@ -67,8 +69,8 @@ const CatalogPage = () => {
                     )}
                 </div>
                 <div className="flex flex-col w-full">
-                    {filteredProducts.map((p) => (
-                        <CatalogItem key={p.id} product={p}/>
+                    {filteredProducts.map((product) => (
+                        <CatalogItem key={product.id} catalog={catalog} product={product}/>
                     ))}
                 </div>
             </div>

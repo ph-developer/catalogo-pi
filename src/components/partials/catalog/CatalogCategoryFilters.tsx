@@ -1,15 +1,20 @@
 import { Badge } from "@/components/ui/badge"
 import { Icons } from "@/components/ui/icons"
 import { Category } from "@/types/category"
+import {colors} from "@/lib/colors.ts";
+import {Catalog} from "@/types/catalog";
 
 interface Props {
+    catalog: Catalog
     categories: Category[]
     onCategoryClick: (category: Category) => void
 }
 
-export const CatalogCategoryFilters = ({ categories, onCategoryClick }: Props) => {
+export const CatalogCategoryFilters = ({catalog, categories, onCategoryClick }: Props) => {
     return (
-        <div>
+        <div style={catalog?.bannerDominantColor ? {
+            color: colors.getTextColor(catalog.bannerDominantColor),
+        } : {}}>
             <p className="mb-1 text-sm font-medium">
                 Filtros
             </p>

@@ -1,15 +1,20 @@
 import { Category } from "@/types/category"
 import { Product } from "@/types/product"
+import {Catalog} from "@/types/catalog";
+import {colors} from "@/lib/colors.ts";
 
 interface Props {
+    catalog: Catalog
     products: Product[]
     categories: Category[]
     onCategoryClick: (category: Category) => void
 }
 
-export const CatalogCategories = ({ categories, products, onCategoryClick }: Props) => {
+export const CatalogCategories = ({ catalog, categories, products, onCategoryClick }: Props) => {
     return (
-        <div>
+        <div style={catalog?.bannerDominantColor ? {
+            color: colors.getTextColor(catalog.bannerDominantColor),
+        } : {}}>
             <p className="mb-1 text-sm font-medium">
                 Categorias
             </p>

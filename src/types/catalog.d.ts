@@ -4,6 +4,7 @@ import { Product } from './product'
 export interface Catalog {
     id?: string
     banner: string | null
+    bannerDominantColor: string | null
     name: string
     company: string
     cnpj: string

@@ -17,10 +17,11 @@ import {useNotifications} from "@/hooks/use-notifications.tsx";
 import {LazyLoadImg} from "@/components/ui/lazy-load-img.tsx";
 import {Icons} from "@/components/ui/icons.tsx";
 import {storageRepository} from "@/repositories/storage-repository.ts";
+import {colors} from "@/lib/colors.ts";
 
 interface Props {
     children: ReactElement
-    catalog?: Catalog
+    catalog?: Catalog|null
     onSaveCatalog: (old: Catalog | null, catalog: Catalog) => void
 }
 
@@ -51,6 +52,7 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
     const [whatsapp, setWhatsapp] = useState<string>(catalog?.whatsapp || '')
     const [banner, setBanner] = useState<string | null>(catalog?.banner || null)
     const [bannerInputValue, setBannerInputValue] = useState<string>('')
+    const [bannerDominantColor, setBannerDominantColor] = useState<string | null>(catalog?.bannerDominantColor || null)
 
     const reload = (open: boolean) => {
         if (open) {
@@ -59,8 +61,9 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
             setCnpj(catalog?.cnpj || '')
             setAddress(catalog?.address || '')
             setWhatsapp(catalog?.whatsapp || '')
-            setBanner(catalog?.banner || '')
+            setBanner(catalog?.banner || null)
             setBannerInputValue('')
+            setBannerDominantColor(catalog?.bannerDominantColor || null)
         }
         setIsOpen(open)
     }
@@ -81,7 +84,7 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
         if (!validate()) return
         setIsLoading(true)
         onSaveCatalog(catalog, {
-            name, company, cnpj, address, whatsapp, banner,
+            name, company, cnpj, address, whatsapp, banner, bannerDominantColor,
             id: catalog?.id,
             categoryIds: catalog?.categoryIds || [],
             productIds: catalog?.productIds || [],
@@ -91,14 +94,19 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
     }
 
     const onChangeBanner: ChangeEventHandler<HTMLInputElement> = async (e) => {
-        const file = e.target.files[0] || null
+        const file = e.target.files?.item(0) || null
         const fileUrl = file ? '' + URL.createObjectURL(file) : null
+        const dominantColor = fileUrl ? await colors.getDominantColor(fileUrl) : null
         setBanner(fileUrl)
         setBannerInputValue(e.target.value)
+        setBannerDominantColor(dominantColor)
     }
 
     useEffect(() => {
-        if (banner === null) setBannerInputValue('')
+        if (banner === null) {
+            setBannerInputValue('')
+            setBannerDominantColor(null)
+        }
     }, [banner]);
 
     return (
