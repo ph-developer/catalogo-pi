@@ -1,13 +1,13 @@
 import {useLoaderData} from "react-router-dom"
 import {Catalog} from '@/types/catalog'
-import {CatalogItem} from '@/components/partials/catalog/CatalogItem.tsx'
-import {CatalogCategories} from '@/components/partials/catalog/CatalogCategories.tsx'
-import {CatalogCompanyInfo} from '@/components/partials/catalog/CatalogCompanyInfo.tsx'
+import {CatalogItem} from '@/components/partials/public/catalog/CatalogItem.tsx'
+import {CatalogCategories} from '@/components/partials/public/catalog/CatalogCategories.tsx'
+import {CatalogCompanyInfo} from '@/components/partials/public/catalog/CatalogCompanyInfo.tsx'
 import {useMemo, useState} from "react"
 import {Category} from "@/types/category"
-import {CatalogNotFound} from "@/components/partials/catalog/CatalogNotFound.tsx"
-import {CatalogCategoryFilters} from "@/components/partials/catalog/CatalogCategoryFilters.tsx"
-import {CatalogCompanyBanner} from "@/components/partials/catalog/CatalogCompanyBanner.tsx";
+import {CatalogNotFound} from "@/components/partials/public/catalog/CatalogNotFound.tsx"
+import {CatalogCategoryFilters} from "@/components/partials/public/catalog/CatalogCategoryFilters.tsx"
+import {CatalogCompanyBanner} from "@/components/partials/public/catalog/CatalogCompanyBanner.tsx";
 import {useMount} from "@/hooks/use-mount.tsx";
 import {meta} from "@/lib/meta.ts";
 

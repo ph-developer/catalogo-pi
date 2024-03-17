@@ -1,7 +1,7 @@
-import { Icons } from "@/components/ui/icons"
+import { Icons } from "@/components/ui/icons.tsx"
 import { Catalog } from "@/types/catalog"
-import { makeWhatsappUrl } from '@/lib/whatsapp'
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip'
+import { makeWhatsappUrl } from '@/lib/whatsapp.ts'
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip.tsx'
 import {colors} from "@/lib/colors.ts";
 
 interface Props {

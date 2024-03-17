@@ -1,8 +1,8 @@
 import { Product } from "@/types/product"
-import { Card, CardContent, CardTitle } from "@/components/ui/card"
-import { Badge } from '@/components/ui/badge'
-import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, CarouselApi } from '@/components/ui/carousel'
-import { useMount } from '@/hooks/use-mount'
+import { Card, CardContent, CardTitle } from "@/components/ui/card.tsx"
+import { Badge } from '@/components/ui/badge.tsx'
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, CarouselApi } from '@/components/ui/carousel.tsx'
+import { useMount } from '@/hooks/use-mount.tsx'
 import { useEffect, useState } from "react"
 import { LazyLoadImg } from '@/components/ui/lazy-load-img.tsx'
 import {storageRepository} from "@/repositories/storage-repository.ts";

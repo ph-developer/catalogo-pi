@@ -1,5 +1,5 @@
-import { Badge } from "@/components/ui/badge"
-import { Icons } from "@/components/ui/icons"
+import { Badge } from "@/components/ui/badge.tsx"
+import { Icons } from "@/components/ui/icons.tsx"
 import { Category } from "@/types/category"
 import {colors} from "@/lib/colors.ts";
 import {Catalog} from "@/types/catalog";
