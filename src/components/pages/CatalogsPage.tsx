@@ -79,92 +79,94 @@ const CatalogsPage = () => {
                                     <TableCell className="whitespace-nowrap">
                                         {catalog.whatsapp.formatPhone()}
                                     </TableCell>
-                                    <TableCell className="flex items-center justify-center space-x-1.5 mt-1">
-                                        {catalog.banner ? (
+                                    <TableCell className="whitespace-nowrap">
+                                        <div className="flex items-center justify-center space-x-1.5 align-middle">
+                                            {catalog.banner ? (
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <div>
+                                                                <Icons.image
+                                                                    className="w-3.5 h-3.5 cursor-pointer stroke-primary"
+                                                                />
+                                                            </div>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            <LazyLoadImg
+                                                                // TODO: replace with modal
+                                                                className="object-contain h-48 w-48"
+                                                                imgSrc={() => storageRepository.getBannerPhotoSrc(catalog.banner!)}
+                                                            />
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+                                            ) : (
+                                                <div>
+                                                    <Icons.image
+                                                        className="w-3.5 h-3.5 cursor-not-allowed stroke-primary/50"
+                                                    />
+                                                </div>
+                                            )}
                                             <TooltipProvider>
                                                 <Tooltip>
                                                     <TooltipTrigger asChild>
                                                         <div>
-                                                            <Icons.image
-                                                                className="w-3.5 h-3.5 cursor-pointer stroke-primary"
-                                                            />
+                                                            <EditCatalogDialog catalog={catalog}
+                                                                               onSaveCatalog={saveCatalog}>
+                                                                <div>
+                                                                    <Icons.edit
+                                                                        className="w-3.5 h-3.5 cursor-pointer stroke-success"
+                                                                    />
+                                                                </div>
+                                                            </EditCatalogDialog>
                                                         </div>
                                                     </TooltipTrigger>
                                                     <TooltipContent>
-                                                        <LazyLoadImg
-                                                            // TODO: replace with modal
-                                                            className="object-contain h-48 w-48"
-                                                            imgSrc={() => storageRepository.getBannerPhotoSrc(catalog.banner!)}
-                                                        />
+                                                        <p>Editar</p>
                                                     </TooltipContent>
                                                 </Tooltip>
                                             </TooltipProvider>
-                                        ) : (
-                                            <div>
-                                                <Icons.image
-                                                    className="w-3.5 h-3.5 cursor-not-allowed stroke-primary/50"
-                                                />
-                                            </div>
-                                        )}
-                                        <TooltipProvider>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <div>
-                                                        <EditCatalogDialog catalog={catalog}
-                                                                           onSaveCatalog={saveCatalog}>
-                                                            <div>
-                                                                <Icons.edit
-                                                                    className="w-3.5 h-3.5 cursor-pointer stroke-success"
-                                                                />
-                                                            </div>
-                                                        </EditCatalogDialog>
-                                                    </div>
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                    <p>Editar</p>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </TooltipProvider>
-                                        <TooltipProvider>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <div>
-                                                        <AlertDialog>
-                                                            <AlertDialogTrigger asChild>
-                                                                <div>
-                                                                    <Icons.trash
-                                                                        className="w-3.5 h-3.5 cursor-pointer stroke-destructive"
-                                                                    />
-                                                                </div>
-                                                            </AlertDialogTrigger>
-                                                            <AlertDialogContent>
-                                                                <AlertDialogHeader>
-                                                                    <AlertDialogTitle>
-                                                                        Excluir catálogo?
-                                                                    </AlertDialogTitle>
-                                                                    <AlertDialogDescription>
-                                                                        Esta ação não pode ser desfeita.
-                                                                        Deseja realmente excluir este catálogo?
-                                                                    </AlertDialogDescription>
-                                                                </AlertDialogHeader>
-                                                                <AlertDialogFooter>
-                                                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                                                    <AlertDialogAction
-                                                                        className="bg-destructive hover:bg-destructive/90"
-                                                                        onClick={() => deleteCatalog(catalog)}
-                                                                    >
-                                                                        Excluir
-                                                                    </AlertDialogAction>
-                                                                </AlertDialogFooter>
-                                                            </AlertDialogContent>
-                                                        </AlertDialog>
-                                                    </div>
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                    <p>Excluir</p>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </TooltipProvider>
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <div>
+                                                            <AlertDialog>
+                                                                <AlertDialogTrigger asChild>
+                                                                    <div>
+                                                                        <Icons.trash
+                                                                            className="w-3.5 h-3.5 cursor-pointer stroke-destructive"
+                                                                        />
+                                                                    </div>
+                                                                </AlertDialogTrigger>
+                                                                <AlertDialogContent>
+                                                                    <AlertDialogHeader>
+                                                                        <AlertDialogTitle>
+                                                                            Excluir catálogo?
+                                                                        </AlertDialogTitle>
+                                                                        <AlertDialogDescription>
+                                                                            Esta ação não pode ser desfeita.
+                                                                            Deseja realmente excluir este catálogo?
+                                                                        </AlertDialogDescription>
+                                                                    </AlertDialogHeader>
+                                                                    <AlertDialogFooter>
+                                                                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                                        <AlertDialogAction
+                                                                            className="bg-destructive hover:bg-destructive/90"
+                                                                            onClick={() => deleteCatalog(catalog)}
+                                                                        >
+                                                                            Excluir
+                                                                        </AlertDialogAction>
+                                                                    </AlertDialogFooter>
+                                                                </AlertDialogContent>
+                                                            </AlertDialog>
+                                                        </div>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Excluir</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))}
