@@ -9,7 +9,7 @@ export const colors = {
         }
     },
     getDominantColor: async (src: string) => {
-        return new Promise((resolve) => {
+        return new Promise<string|null>((resolve) => {
             const img = new Image();
             img.crossOrigin = 'Anonymous';
 
