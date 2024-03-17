@@ -13,15 +13,15 @@ import {EditCatalogDialog} from "@/components/dialogs/EditCatalogDialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {catalogRepository} from "@/repositories/catalog-repository.ts";
 import {useNotifications} from "@/hooks/use-notifications.tsx";
-import {LazyLoadImg} from "@/components/ui/lazy-load-img.tsx";
 import {storageRepository} from "@/repositories/storage-repository.ts";
+import {ImgDialog} from "@/components/dialogs/ImgDialog.tsx";
 
 const CatalogsPage = () => {
     const catalogs = useLoaderData() as Catalog[]
     const navigate = useNavigate()
     const {notifySuccess} = useNotifications()
 
-    const saveCatalog = async (old: Catalog|null, catalog: Catalog) => {
+    const saveCatalog = async (old: Catalog | null, catalog: Catalog) => {
         await catalogRepository.upsertCatalog(old, catalog)
         notifySuccess('Catálogo ' + (old ? 'atualizado.' : 'criado.'))
         navigate(0) // TODO: remove refresh
@@ -85,18 +85,18 @@ const CatalogsPage = () => {
                                                 <TooltipProvider>
                                                     <Tooltip>
                                                         <TooltipTrigger asChild>
-                                                            <div>
-                                                                <Icons.image
-                                                                    className="w-3.5 h-3.5 cursor-pointer stroke-primary"
-                                                                />
+                                                            <div className="mt-1">
+                                                                <ImgDialog
+                                                                    src={() => storageRepository.getBannerPhotoSrc(catalog.banner!)}
+                                                                >
+                                                                    <Icons.image
+                                                                        className="w-3.5 h-3.5 cursor-pointer stroke-primary"
+                                                                    />
+                                                                </ImgDialog>
                                                             </div>
                                                         </TooltipTrigger>
                                                         <TooltipContent>
-                                                            <LazyLoadImg
-                                                                // TODO: replace with modal
-                                                                className="object-contain h-48 w-48"
-                                                                imgSrc={() => storageRepository.getBannerPhotoSrc(catalog.banner!)}
-                                                            />
+                                                            <p>Visualizar Banner</p>
                                                         </TooltipContent>
                                                     </Tooltip>
                                                 </TooltipProvider>
