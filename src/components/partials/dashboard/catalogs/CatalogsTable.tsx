@@ -6,14 +6,8 @@ import {UrlQrCodeDialog} from "@/components/dialogs/UrlQrCodeDialog.tsx";
 import {ImgDialog} from "@/components/dialogs/ImgDialog.tsx";
 import {storageRepository} from "@/repositories/storage-repository.ts";
 import {EditCatalogDialog} from "@/components/dialogs/EditCatalogDialog.tsx";
-import {
-    AlertDialog, AlertDialogAction, AlertDialogCancel,
-    AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger
-} from "@/components/ui/alert-dialog.tsx";
 import {Catalog} from "@/types/catalog";
+import {ConfirmDeleteCatalogDialog} from "@/components/dialogs/ConfirmDeleteCatalogDialog.tsx";
 
 interface Props {
     catalogs: Catalog[]
@@ -58,9 +52,7 @@ export const CatalogsTable = ({catalogs, onUpdateCatalog, onDeleteCatalog}: Prop
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <Link to={`/${catalog.url}`} target="_blank">
-                                                <Icons.open
-                                                    className="w-3.5 h-3.5 cursor-pointer stroke-primary"
-                                                />
+                                                <Icons.open className="w-3.5 h-3.5 cursor-pointer stroke-primary"/>
                                             </Link>
                                         </TooltipTrigger>
                                         <TooltipContent>
@@ -106,9 +98,7 @@ export const CatalogsTable = ({catalogs, onUpdateCatalog, onDeleteCatalog}: Prop
                                         </Tooltip>
                                     </TooltipProvider>
                                 ) : (
-                                    <div>
-                                        <Icons.image className="w-3.5 h-3.5 cursor-not-allowed stroke-primary/50"/>
-                                    </div>
+                                    <Icons.image className="w-3.5 h-3.5 cursor-not-allowed stroke-primary/50"/>
                                 )}
 
                                 <TooltipProvider>
@@ -131,40 +121,17 @@ export const CatalogsTable = ({catalogs, onUpdateCatalog, onDeleteCatalog}: Prop
 
                                 <TooltipProvider>
                                     <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <div>
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <div>
-                                                            <Icons.trash
-                                                                className="w-3.5 h-3.5 cursor-pointer stroke-destructive"
-                                                            />
-                                                        </div>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>
-                                                                Excluir catálogo?
-                                                            </AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                Esta ação não pode ser desfeita.
-                                                                Deseja realmente excluir este catálogo?
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>
-                                                                Cancelar
-                                                            </AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                className="bg-destructive hover:bg-destructive/90"
-                                                                onClick={() => onDeleteCatalog(catalog)}
-                                                            >
-                                                                Excluir
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </div>
+                                        <TooltipTrigger>
+                                            <ConfirmDeleteCatalogDialog
+                                                catalog={catalog}
+                                                onDeleteCatalog={onDeleteCatalog}
+                                            >
+                                                <div>
+                                                    <Icons.trash
+                                                        className="w-3.5 h-3.5 cursor-pointer stroke-destructive"
+                                                    />
+                                                </div>
+                                            </ConfirmDeleteCatalogDialog>
                                         </TooltipTrigger>
                                         <TooltipContent>
                                             <p>Excluir</p>

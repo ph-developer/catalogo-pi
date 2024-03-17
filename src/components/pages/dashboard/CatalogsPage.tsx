@@ -1,21 +1,9 @@
-import {Link, useLoaderData, useNavigate} from "react-router-dom";
+import {useLoaderData, useNavigate} from "react-router-dom";
 import {Catalog} from "@/types/catalog";
-import {Table, TableBody, TableHead, TableHeader, TableRow, TableCell} from "@/components/ui/table.tsx";
-import {Icons} from "@/components/ui/icons.tsx";
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip.tsx";
-import {
-    AlertDialog, AlertDialogAction, AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
-    AlertDialogTrigger
-} from "@/components/ui/alert-dialog.tsx";
 import {EditCatalogDialog} from "@/components/dialogs/EditCatalogDialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {catalogRepository} from "@/repositories/catalog-repository.ts";
 import {useNotifications} from "@/hooks/use-notifications.tsx";
-import {storageRepository} from "@/repositories/storage-repository.ts";
-import {ImgDialog} from "@/components/dialogs/ImgDialog.tsx";
-import {UrlQrCodeDialog} from "@/components/dialogs/UrlQrCodeDialog.tsx";
 import {CatalogsTable} from "@/components/partials/dashboard/catalogs/CatalogsTable.tsx";
 
 const CatalogsPage = () => {
