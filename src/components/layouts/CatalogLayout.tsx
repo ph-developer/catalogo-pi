@@ -1,14 +1,11 @@
-import {useState} from "react"
 import {Link, Outlet, useLoaderData} from "react-router-dom"
 import {Button} from "@/components/ui/button"
 import {Icons} from "@/components/ui/icons"
-import {SelectLocationDialog} from "@/components/dialogs/SelectLocationDialog.tsx"
 import {colors} from "@/lib/colors.ts";
 import {Catalog} from "@/types/catalog";
 
 const CatalogLayout = () => {
     const catalog = useLoaderData() as Catalog | null
-    const [city, setCity] = useState<string | null>(null)
 
     return (
         <>
@@ -24,13 +21,10 @@ const CatalogLayout = () => {
                         </Link>
                     </div>
                     <div className="ml-auto flex items-center space-x-2 mr-2">
-                        <SelectLocationDialog onChangeCity={setCity}>
-                            <Button className="p-2" variant="ghost">
-                                <Icons.mapPin className='h-4 w-4 mr-2'/>
-                                {city || 'Selecionar Cidade'}
-                            </Button>
-                        </SelectLocationDialog>
-                        <Button variant="ghost" className='ml-auto' asChild>
+                        <Button variant="ghost" className='ml-auto' asChild style={catalog?.bannerDominantColor ? {
+                            color: colors.getTextColor(catalog.bannerDominantColor),
+                            backgroundColor: colors.getDarkenColor(catalog.bannerDominantColor, 2.5),
+                        } : {}}>
                             <Link to='/login'>
                                 <Icons.dash className='h-4 w-4 mr-2'/>
                                 Dashboard
