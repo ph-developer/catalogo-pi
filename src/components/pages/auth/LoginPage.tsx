@@ -1,10 +1,10 @@
-import { Icons } from "@/components/ui/icons"
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Button } from "@/components/ui/button"
+import { Icons } from "@/components/ui/icons.tsx"
+import { Label } from '@/components/ui/label.tsx'
+import { Input } from '@/components/ui/input.tsx'
+import { Button } from "@/components/ui/button.tsx"
 import { FormEventHandler, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { useNotifications } from '@/hooks/use-notifications'
+import { useNotifications } from '@/hooks/use-notifications.tsx'
 import {authRepository} from "@/repositories/auth-repository.ts";
 import {z} from "zod";
 

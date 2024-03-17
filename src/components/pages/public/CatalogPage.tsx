@@ -1,8 +1,8 @@
 import {useLoaderData} from "react-router-dom"
 import {Catalog} from '@/types/catalog'
-import {CatalogItem} from '@/components/partials/catalog/CatalogItem'
-import {CatalogCategories} from '@/components/partials/catalog/CatalogCategories'
-import {CatalogCompanyInfo} from '@/components/partials/catalog/CatalogCompanyInfo'
+import {CatalogItem} from '@/components/partials/catalog/CatalogItem.tsx'
+import {CatalogCategories} from '@/components/partials/catalog/CatalogCategories.tsx'
+import {CatalogCompanyInfo} from '@/components/partials/catalog/CatalogCompanyInfo.tsx'
 import {useMemo, useState} from "react"
 import {Category} from "@/types/category"
 import {CatalogNotFound} from "@/components/partials/catalog/CatalogNotFound.tsx"

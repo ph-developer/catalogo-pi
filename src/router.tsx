@@ -13,14 +13,14 @@ export const router = createBrowserRouter([
             {
                 path: '',
                 lazy: async () => ({
-                    Component: (await import('@/components/pages/HomePage')).default
+                    Component: (await import('@/components/pages/public/HomePage.tsx')).default
                 }),
             },
             {
                 path: ':catalogName',
                 loader: catalogLoader,
                 lazy: async () => ({
-                    Component: (await import('@/components/pages/CatalogPage')).default
+                    Component: (await import('@/components/pages/public/CatalogPage.tsx')).default
                 })
             }
         ]
@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
             {
                 path: '',
                 lazy: async () => ({
-                    Component: (await import('@/components/pages/LoginPage')).default
+                    Component: (await import('@/components/pages/auth/LoginPage.tsx')).default
                 })
             },
         ]
@@ -49,14 +49,14 @@ export const router = createBrowserRouter([
             {
                 path: '',
                 lazy: async () => ({
-                    Component: (await import('@/components/pages/DashboardPage')).default
+                    Component: (await import('@/components/pages/dashboard/DashboardPage.tsx')).default
                 }),
             },
             {
                 path: 'catalogs',
                 loader: catalogsLoader,
                 lazy: async () => ({
-                    Component: (await import('@/components/pages/CatalogsPage')).default
+                    Component: (await import('@/components/pages/dashboard/CatalogsPage.tsx')).default
                 }),
             }
         ]
