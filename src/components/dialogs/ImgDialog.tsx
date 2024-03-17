@@ -14,7 +14,7 @@ export const ImgDialog = ({src, children}: Props) => {
                 {children}
             </DialogTrigger>
             <DialogContent className="flex justify-center sm:max-w-96">
-                <LazyLoadImg imgSrc={src} className="object-cover rounded-lg h-80 w-80 mt-6" />
+                <LazyLoadImg imgSrc={src} className="object-contain h-80 w-80 mt-6" />
             </DialogContent>
         </Dialog>
     )
