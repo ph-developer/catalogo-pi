@@ -60,12 +60,8 @@ const CatalogsPage = () => {
                         <TableBody>
                             {catalogs.map((catalog) => (
                                 <TableRow key={catalog.id}>
-                                    <TableCell className="whitespace-nowrap">
-                                        <Button className="p-0 h-fit w-fit" variant="link" asChild>
-                                            <Link to={`/${catalog.name}`} target="_blank">
-                                                {catalog.name}
-                                            </Link>
-                                        </Button>
+                                    <TableCell>
+                                        {catalog.name}
                                     </TableCell>
                                     <TableCell>
                                         {catalog.company}
@@ -81,6 +77,20 @@ const CatalogsPage = () => {
                                     </TableCell>
                                     <TableCell className="whitespace-nowrap">
                                         <div className="flex items-center justify-center space-x-1.5 align-middle">
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Link to={`/${catalog.url}`} target="_blank">
+                                                            <Icons.open
+                                                                className="w-3.5 h-3.5 cursor-pointer stroke-primary"
+                                                            />
+                                                        </Link>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Abrir "{catalog.url}"</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
                                             {catalog.banner ? (
                                                 <TooltipProvider>
                                                     <Tooltip>

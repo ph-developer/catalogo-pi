@@ -8,6 +8,8 @@ import {Category} from "@/types/category"
 import {CatalogNotFound} from "@/components/partials/catalog/CatalogNotFound.tsx"
 import {CatalogCategoryFilters} from "@/components/partials/catalog/CatalogCategoryFilters.tsx"
 import {CatalogCompanyBanner} from "@/components/partials/catalog/CatalogCompanyBanner.tsx";
+import {useMount} from "@/hooks/use-mount.tsx";
+import {meta} from "@/lib/meta.ts";
 
 const CatalogPage = () => {
     const catalog = useLoaderData() as Catalog | null
@@ -34,6 +36,11 @@ const CatalogPage = () => {
             setCategoryFilterIds(ids)
         }
     }
+
+    useMount(() => {
+        if (!catalog) return
+        meta.setPageTitle(catalog.name)
+    })
 
     if (!catalog) return <CatalogNotFound/>
 

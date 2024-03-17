@@ -6,6 +6,7 @@ export interface Catalog {
     banner: string | null
     bannerDominantColor: string | null
     name: string
+    url: string
     company: string
     cnpj: string
     address: string

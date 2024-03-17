@@ -27,6 +27,8 @@ interface Props {
 
 const formSchema = z.object({
     name: z.string()
+        .min(1, 'O campo nome do catálogo é obrigatório.'),
+    url: z.string()
         .min(1, 'O campo url do catálogo é obrigatório.')
         .regex(/^[a-zA-Z0-9_-]*$/, 'O campo url do catálogo possui caracteres inválidos.'),
     company: z.string()
@@ -46,6 +48,7 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [name, setName] = useState<string>(catalog?.name || '')
+    const [url, setUrl] = useState<string>(catalog?.url || '')
     const [company, setCompany] = useState<string>(catalog?.company || '')
     const [cnpj, setCnpj] = useState<string>(catalog?.cnpj || '')
     const [address, setAddress] = useState<string>(catalog?.address || '')
@@ -57,6 +60,7 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
     const reload = (open: boolean) => {
         if (open) {
             setName(catalog?.name || '')
+            setUrl(catalog?.url || '')
             setCompany(catalog?.company || '')
             setCnpj(catalog?.cnpj || '')
             setAddress(catalog?.address || '')
@@ -70,7 +74,7 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
 
     const validate = () => {
         const result = formSchema.safeParse({
-            name, company, cnpj, address, whatsapp
+            name, url, company, cnpj, address, whatsapp
         })
 
         if (!result.success) {
@@ -84,7 +88,7 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
         if (!validate()) return
         setIsLoading(true)
         onSaveCatalog(catalog, {
-            name, company, cnpj, address, whatsapp, banner, bannerDominantColor,
+            name, url, company, cnpj, address, whatsapp, banner, bannerDominantColor,
             id: catalog?.id,
             categoryIds: catalog?.categoryIds || [],
             productIds: catalog?.productIds || [],
@@ -124,9 +128,14 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
                 <div className="grid gap-4 py-4">
                     <div className="flex flex-col space-y-4">
                         <div>
-                            <Label htmlFor="name">URL do Catálogo</Label>
+                            <Label htmlFor="name">Nome do Catálogo</Label>
                             <Input id="name" value={name} disabled={isLoading} autoFocus
                                    onChange={(e) => setName(e.currentTarget.value)}/>
+                        </div>
+                        <div>
+                            <Label htmlFor="url">URL do Catálogo</Label>
+                            <Input id="url" value={url} disabled={isLoading}
+                                   onChange={(e) => setUrl(e.currentTarget.value)}/>
                             <div className="text-xs text-muted-foreground">
                                 Apenas letras, números, hífens e underlines são permitidos.
                             </div>

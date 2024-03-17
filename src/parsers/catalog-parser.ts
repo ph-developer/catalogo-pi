@@ -9,6 +9,7 @@ export const catalogParser = {
         banner: doc.get('banner'),
         bannerDominantColor: doc.get('bannerDominantColor'),
         name: doc.get('name'),
+        url: doc.get('url'),
         company: doc.get('company'),
         cnpj: doc.get('cnpj'),
         address: doc.get('address'),

@@ -11,7 +11,7 @@ export const catalogLoader: LoaderFunction = async ({params}: LoaderFunctionArgs
 
     if (!catalogName) return null
 
-    const catalog = await catalogRepository.getCatalogByName(catalogName, ['categories', 'products'])
+    const catalog = await catalogRepository.getCatalogByUrl(catalogName, ['categories', 'products'])
 
     if (catalog?.bannerDominantColor) {
         colors.setBackgroundColor(catalog.bannerDominantColor)

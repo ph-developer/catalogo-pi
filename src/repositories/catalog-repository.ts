@@ -12,8 +12,8 @@ type Lazy = ('products' | 'categories')[]
 const catalogsRef = collection(db, 'catalogs')
 
 export const catalogRepository = {
-    getCatalogByName: async (name: string, lazy: Lazy = []): Promise<Catalog | null> => {
-        const catalogsQuery = query(catalogsRef, where('name', '==', name), limit(1))
+    getCatalogByUrl: async (url: string, lazy: Lazy = []): Promise<Catalog | null> => {
+        const catalogsQuery = query(catalogsRef, where('url', '==', url), limit(1))
         const catalogsSnapshot = await getDocs(catalogsQuery)
 
         if (catalogsSnapshot.empty) return null
