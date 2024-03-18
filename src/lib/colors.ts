@@ -1,13 +1,6 @@
 import tinycolor from 'tinycolor2'
 
 export const colors = {
-    setBackgroundColor: (classNameOrHex: string) => {
-        if (classNameOrHex.startsWith('#')) {
-            document.body.style.backgroundColor = classNameOrHex
-        } else if (classNameOrHex.startsWith('bg-')) {
-            document.body.classList.add(classNameOrHex)
-        }
-    },
     getDominantColor: async (src: string) => {
         return new Promise<string|null>((resolve) => {
             const img = new Image();

@@ -7,6 +7,8 @@ import { Link } from "react-router-dom"
 import { useNotifications } from '@/hooks/use-notifications.tsx'
 import {z} from "zod";
 import {useAuth} from "@/hooks/use-auth.ts";
+import {useBgColor} from "@/hooks/use-bg-color.ts";
+import {usePageTitle} from "@/hooks/use-page-title.ts";
 
 const formSchema = z.object({
     email: z.string()
@@ -17,6 +19,9 @@ const formSchema = z.object({
 })
 
 const LoginPage = () => {
+    useBgColor()
+    usePageTitle('Login')
+
     const { notifyError } = useNotifications()
     const {doLogin} = useAuth()
     const [email, setEmail] = useState<string>('')

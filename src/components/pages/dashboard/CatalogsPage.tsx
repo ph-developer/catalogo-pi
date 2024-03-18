@@ -4,8 +4,13 @@ import {Button} from "@/components/ui/button.tsx";
 import {useNotifications} from "@/hooks/use-notifications.tsx";
 import {CatalogsTable} from "@/components/partials/dashboard/catalogs/CatalogsTable.tsx";
 import {useCatalogs} from "@/hooks/use-catalogs.ts";
+import {useBgColor} from "@/hooks/use-bg-color.ts";
+import {usePageTitle} from "@/hooks/use-page-title.ts";
 
 const CatalogsPage = () => {
+    useBgColor()
+    usePageTitle('Meus Catálogos')
+
     const {catalogs, insertCatalog, updateCatalog, deleteCatalog} = useCatalogs()
     const {notifySuccess} = useNotifications()
 

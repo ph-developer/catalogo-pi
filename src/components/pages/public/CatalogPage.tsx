@@ -2,14 +2,14 @@ import {useParams} from "react-router-dom"
 import {CatalogItem} from '@/components/partials/public/catalog/CatalogItem.tsx'
 import {CatalogCategories} from '@/components/partials/public/catalog/CatalogCategories.tsx'
 import {CatalogCompanyInfo} from '@/components/partials/public/catalog/CatalogCompanyInfo.tsx'
-import {useEffect, useMemo, useState} from "react"
+import {useMemo, useState} from "react"
 import {Category} from "@/types/category"
 import {CatalogNotFound} from "@/components/partials/public/catalog/CatalogNotFound.tsx"
 import {CatalogCategoryFilters} from "@/components/partials/public/catalog/CatalogCategoryFilters.tsx"
 import {CatalogCompanyBanner} from "@/components/partials/public/catalog/CatalogCompanyBanner.tsx";
-import {meta} from "@/lib/meta.ts";
 import {useCatalog} from "@/hooks/use-catalog.ts";
-import {colors} from "@/lib/colors.ts";
+import {usePageTitle} from "@/hooks/use-page-title.ts";
+import {useBgColor} from "@/hooks/use-bg-color.ts";
 
 const CatalogPage = () => {
     const {catalogUrl} = useParams()
@@ -38,10 +38,8 @@ const CatalogPage = () => {
         }
     }
 
-    useEffect(() => {
-        if (catalog?.name) meta.setPageTitle(catalog.name)
-        if (catalog?.bannerDominantColor) colors.setBackgroundColor(catalog.bannerDominantColor)
-    }, [catalog])
+    useBgColor(catalog?.bannerDominantColor)
+    usePageTitle(catalog?.name)
 
     if (isLoading) return <></>
 
