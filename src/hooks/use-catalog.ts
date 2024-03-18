@@ -8,7 +8,7 @@ import {catalogParser} from "@/parsers/catalog-parser.ts";
 import {categoryParser} from "@/parsers/category-parser.ts";
 import {productParser} from "@/parsers/product-parser.ts";
 
-export const useCatalog = (by: 'url'|'id', value: string) => {
+export const useCatalog = (by: 'url'|'id', value: string|null = null) => {
     const [catalog, setCatalog] = useState<Catalog|null>(null)
     const [categoryIds, setCategoryIds] = useState<string[]>([])
     const [categories, setCategories] = useState<Category[]>([])
@@ -40,6 +40,8 @@ export const useCatalog = (by: 'url'|'id', value: string) => {
                 }
                 setIsLoadingCatalog(false)
             })
+        } else if (!value) {
+            setIsLoadingCatalog(false)
         }
     }, [by, value])
 

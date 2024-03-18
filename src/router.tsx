@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 export const router = createBrowserRouter([
     {
-        path: '/',
+        path: '',
         lazy: async () => ({
             Component: (await import('@/components/layouts/PublicLayout.tsx')).default
         }),

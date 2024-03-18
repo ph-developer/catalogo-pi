@@ -6,9 +6,9 @@ import {useCatalog} from "@/hooks/use-catalog.ts";
 
 const PublicLayout = () => {
     const {catalogUrl} = useParams()
-    const {catalog, isLoading} = useCatalog('url', catalogUrl!)
+    const {catalog, isLoading} = useCatalog('url', catalogUrl)
 
-    if (isLoading) return <></>
+    if (catalogUrl && isLoading) return <></>
 
     return (
         <>
