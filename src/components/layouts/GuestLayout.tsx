@@ -1,22 +1,10 @@
-import {useEffect, useState} from "react"
 import {Navigate, Outlet} from "react-router-dom"
-import {authRepository} from "@/repositories/auth-repository.ts";
+import {useAuth} from "@/hooks/use-auth.ts";
 
 const GuestLayout = () => {
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [isAuth, setIsAuth] = useState<boolean>(false)
+    const {currentUser} = useAuth()
 
-    useEffect(() => {
-        authRepository.onAuthStateChanged((user) => {
-            setIsAuth(!!user)
-            setIsLoading(false)
-        })
-    }, [])
-
-    if (isLoading) return <div/>
-    if (isAuth) return <Navigate to='/dash'/>
-
-    return <Outlet/>
+    return !currentUser ? <Outlet/> : <Navigate to='/dash'/>
 }
 
 export default GuestLayout

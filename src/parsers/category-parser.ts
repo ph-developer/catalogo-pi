@@ -1,9 +1,9 @@
 import { Category } from '@/types/category'
-import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore'
+import { QueryDocumentSnapshot } from 'firebase/firestore'
 
 export const categoryParser = {
     fromFirebase: (
-        doc: QueryDocumentSnapshot<DocumentData, DocumentData>,
+        doc: QueryDocumentSnapshot,
     ): Category => ({
         id: doc.id,
         name: doc.get('name')

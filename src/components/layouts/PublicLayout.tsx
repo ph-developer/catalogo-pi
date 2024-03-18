@@ -1,11 +1,14 @@
-import {Link, Outlet, useLoaderData} from "react-router-dom"
+import {Link, Outlet, useParams} from "react-router-dom"
 import {Button} from "@/components/ui/button"
 import {Icons} from "@/components/ui/icons"
 import {colors} from "@/lib/colors.ts";
-import {Catalog} from "@/types/catalog";
+import {useCatalog} from "@/hooks/use-catalog.ts";
 
 const PublicLayout = () => {
-    const catalog = useLoaderData() as Catalog | null
+    const {catalogUrl} = useParams()
+    const {catalog, isLoading} = useCatalog('url', catalogUrl!)
+
+    if (isLoading) return <></>
 
     return (
         <>

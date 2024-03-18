@@ -1,9 +1,9 @@
 import { Product } from '@/types/product'
-import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore'
+import { QueryDocumentSnapshot } from 'firebase/firestore'
 
 export const productParser = {
     fromFirebase: (
-        doc: QueryDocumentSnapshot<DocumentData, DocumentData>,
+        doc: QueryDocumentSnapshot,
     ): Product => ({
         id: doc.id,
         name: doc.get('name'),

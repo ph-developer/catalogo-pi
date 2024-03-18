@@ -16,8 +16,8 @@ import {z} from "zod";
 import {useNotifications} from "@/hooks/use-notifications.tsx";
 import {LazyLoadImg} from "@/components/ui/lazy-load-img.tsx";
 import {Icons} from "@/components/ui/icons.tsx";
-import {storageRepository} from "@/repositories/storage-repository.ts";
 import {colors} from "@/lib/colors.ts";
+import {useStorage} from "@/hooks/use-storage.ts";
 
 interface Props {
     children: ReactElement
@@ -45,6 +45,7 @@ const formSchema = z.object({
 
 export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Props) => {
     const {notifyError} = useNotifications()
+    const {getImgSrcFn} = useStorage()
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [name, setName] = useState<string>(catalog?.name || '')
@@ -177,7 +178,7 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
                             <div className="flex justify-center border rounded-md border-dashed bg-slate-50">
                                 <LazyLoadImg
                                     key={banner ?? 'null'}
-                                    imgSrc={banner.startsWith('blob:') ? banner : () => storageRepository.getBannerPhotoSrc(banner)}
+                                    imgSrc={banner.startsWith('blob:') ? banner : getImgSrcFn('banner', banner)}
                                     className="object-contain h-48"
                                 />
                             </div>

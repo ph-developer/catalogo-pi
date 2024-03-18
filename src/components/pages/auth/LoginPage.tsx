@@ -3,10 +3,10 @@ import { Label } from '@/components/ui/label.tsx'
 import { Input } from '@/components/ui/input.tsx'
 import { Button } from "@/components/ui/button.tsx"
 import { FormEventHandler, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useNotifications } from '@/hooks/use-notifications.tsx'
-import {authRepository} from "@/repositories/auth-repository.ts";
 import {z} from "zod";
+import {useAuth} from "@/hooks/use-auth.ts";
 
 const formSchema = z.object({
     email: z.string()
@@ -17,8 +17,8 @@ const formSchema = z.object({
 })
 
 const LoginPage = () => {
-    const navigate = useNavigate()
     const { notifyError } = useNotifications()
+    const {doLogin} = useAuth()
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -33,14 +33,13 @@ const LoginPage = () => {
         return result.success
     }
 
-    const doLogin: FormEventHandler = async (e) => {
+    const onLogin: FormEventHandler = async (e) => {
         e.preventDefault()
         if (!validate()) return
 
         setIsLoading(true)
         try {
-            await authRepository.login(email, password)
-            navigate('/dash')
+            await doLogin(email, password)
         } catch (error) {
             notifyError('Credenciais inválidas.')
             setIsLoading(false)
@@ -53,7 +52,7 @@ const LoginPage = () => {
                 <Link to='/'>
                     <Icons.logo className="h-16 w-16 pb-4 stroke-indigo-500" />
                 </Link>
-                <form onSubmit={doLogin} className="flex flex-col space-y-4 w-80">
+                <form onSubmit={onLogin} className="flex flex-col space-y-4 w-80">
                     <div>
                         <Label htmlFor="email">Email</Label>
                         <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.currentTarget.value)} disabled={isLoading} autoFocus />

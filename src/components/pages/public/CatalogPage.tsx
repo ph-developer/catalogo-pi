@@ -1,18 +1,19 @@
-import {useLoaderData} from "react-router-dom"
-import {Catalog} from '@/types/catalog'
+import {useParams} from "react-router-dom"
 import {CatalogItem} from '@/components/partials/public/catalog/CatalogItem.tsx'
 import {CatalogCategories} from '@/components/partials/public/catalog/CatalogCategories.tsx'
 import {CatalogCompanyInfo} from '@/components/partials/public/catalog/CatalogCompanyInfo.tsx'
-import {useMemo, useState} from "react"
+import {useEffect, useMemo, useState} from "react"
 import {Category} from "@/types/category"
 import {CatalogNotFound} from "@/components/partials/public/catalog/CatalogNotFound.tsx"
 import {CatalogCategoryFilters} from "@/components/partials/public/catalog/CatalogCategoryFilters.tsx"
 import {CatalogCompanyBanner} from "@/components/partials/public/catalog/CatalogCompanyBanner.tsx";
-import {useMount} from "@/hooks/use-mount.tsx";
 import {meta} from "@/lib/meta.ts";
+import {useCatalog} from "@/hooks/use-catalog.ts";
+import {colors} from "@/lib/colors.ts";
 
 const CatalogPage = () => {
-    const catalog = useLoaderData() as Catalog | null
+    const {catalogUrl} = useParams()
+    const {catalog, isLoading} = useCatalog('url', catalogUrl!) // todo: view '!'
     const [categoryFilterIds, setCategoryFilterIds] = useState<string[]>([])
 
     const products = useMemo(() => catalog?.products || [], [catalog])
@@ -37,10 +38,12 @@ const CatalogPage = () => {
         }
     }
 
-    useMount(() => {
-        if (!catalog) return
-        meta.setPageTitle(catalog.name)
-    })
+    useEffect(() => {
+        if (catalog?.name) meta.setPageTitle(catalog.name)
+        if (catalog?.bannerDominantColor) colors.setBackgroundColor(catalog.bannerDominantColor)
+    }, [catalog])
+
+    if (isLoading) return <></>
 
     if (!catalog) return <CatalogNotFound/>
 

@@ -4,18 +4,20 @@ import {Link} from "react-router-dom";
 import {Icons} from "@/components/ui/icons.tsx";
 import {UrlQrCodeDialog} from "@/components/dialogs/UrlQrCodeDialog.tsx";
 import {ImgDialog} from "@/components/dialogs/ImgDialog.tsx";
-import {storageRepository} from "@/repositories/storage-repository.ts";
 import {EditCatalogDialog} from "@/components/dialogs/EditCatalogDialog.tsx";
 import {Catalog} from "@/types/catalog";
 import {ConfirmDeleteCatalogDialog} from "@/components/dialogs/ConfirmDeleteCatalogDialog.tsx";
+import {useStorage} from "@/hooks/use-storage.ts";
 
 interface Props {
     catalogs: Catalog[]
-    onUpdateCatalog: (catalog: Catalog) => void | Promise<void>
-    onDeleteCatalog: (catalog: Catalog) => void | Promise<void>
+    onUpdateCatalog: (old: Catalog|null, catalog: Catalog) => void
+    onDeleteCatalog: (catalog: Catalog) => void
 }
 
 export const CatalogsTable = ({catalogs, onUpdateCatalog, onDeleteCatalog}: Props) => {
+    const {getImgSrcFn} = useStorage()
+
     return (<Table>
             <TableHeader>
                 <TableRow>
@@ -83,9 +85,7 @@ export const CatalogsTable = ({catalogs, onUpdateCatalog, onDeleteCatalog}: Prop
                                         <Tooltip>
                                             <TooltipTrigger asChild>
                                                 <div className="mt-1">
-                                                    <ImgDialog
-                                                        src={() => storageRepository.getBannerPhotoSrc(catalog.banner!)}
-                                                    >
+                                                    <ImgDialog src={getImgSrcFn('banner', catalog.banner)}>
                                                         <Icons.image
                                                             className="w-3.5 h-3.5 cursor-pointer stroke-primary"
                                                         />

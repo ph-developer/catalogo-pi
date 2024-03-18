@@ -1,13 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
-import {catalogLoader} from '@/loaders/catalog-loader'
-import {catalogsLoader} from "@/loaders/catalogs-loader.ts";
 
 export const router = createBrowserRouter([
     {
         path: '/',
-        loader: catalogLoader,
         lazy: async () => ({
-            Component: (await import('@/components/layouts/PublicLayout.tsx')).PublicLayout
+            Component: (await import('@/components/layouts/PublicLayout.tsx')).default
         }),
         children: [
             {
@@ -17,8 +14,7 @@ export const router = createBrowserRouter([
                 }),
             },
             {
-                path: ':catalogName',
-                loader: catalogLoader,
+                path: ':catalogUrl',
                 lazy: async () => ({
                     Component: (await import('@/components/pages/public/CatalogPage.tsx')).default
                 })
@@ -41,7 +37,6 @@ export const router = createBrowserRouter([
     },
     {
         path: '/dash',
-        loader: catalogsLoader,
         lazy: async () => ({
             Component: (await import('@/components/layouts/AuthLayout')).default
         }),
@@ -54,7 +49,6 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'catalogs',
-                loader: catalogsLoader,
                 lazy: async () => ({
                     Component: (await import('@/components/pages/dashboard/CatalogsPage.tsx')).default
                 }),

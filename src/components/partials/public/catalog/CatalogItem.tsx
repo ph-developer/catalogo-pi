@@ -5,9 +5,9 @@ import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext
 import { useMount } from '@/hooks/use-mount.tsx'
 import { useEffect, useState } from "react"
 import { LazyLoadImg } from '@/components/ui/lazy-load-img.tsx'
-import {storageRepository} from "@/repositories/storage-repository.ts";
 import {colors} from "@/lib/colors.ts";
 import {Catalog} from "@/types/catalog";
+import {useStorage} from "@/hooks/use-storage.ts";
 
 interface Props {
     catalog: Catalog
@@ -15,6 +15,7 @@ interface Props {
 }
 
 export const CatalogItem = ({ catalog, product }: Props) => {
+    const {getImgSrcFn} = useStorage()
     const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null)
     const [currentImg, setCurrentImg] = useState<number | null>(null)
     const [imgLoadedCount, setImgLoadedCount] = useState<number>(0)
@@ -48,7 +49,7 @@ export const CatalogItem = ({ catalog, product }: Props) => {
                             {product.photos.map((photoId) => (
                                 <CarouselItem key={photoId}>
                                     <LazyLoadImg
-                                        imgSrc={() => storageRepository.getProductPhotoSrc(photoId)}
+                                        imgSrc={getImgSrcFn('product', photoId)}
                                         onIsLoaded={incImgLoadedCount}
                                         className="h-44 w-40 rounded-xl object-cover"
                                     />

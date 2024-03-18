@@ -1,9 +1,9 @@
 import {Catalog} from '@/types/catalog'
-import {DocumentData, QueryDocumentSnapshot} from 'firebase/firestore'
+import {DocumentSnapshot, QueryDocumentSnapshot} from 'firebase/firestore'
 
 export const catalogParser = {
     fromFirebase: (
-        doc: QueryDocumentSnapshot<DocumentData, DocumentData>,
+        doc: QueryDocumentSnapshot| DocumentSnapshot,
     ): Catalog => ({
         id: doc.id,
         banner: doc.get('banner'),

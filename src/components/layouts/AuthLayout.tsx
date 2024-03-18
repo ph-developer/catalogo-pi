@@ -1,6 +1,4 @@
-import {useEffect, useState} from "react"
-import {Link, Navigate, Outlet, useLoaderData} from "react-router-dom"
-import {User} from "@/types/user"
+import {Link, Navigate, Outlet} from "react-router-dom"
 import {Button} from "@/components/ui/button"
 import {Icons} from "@/components/ui/icons"
 import {Label} from "@/components/ui/label.tsx"
@@ -10,26 +8,13 @@ import {
     DropdownMenuItem, DropdownMenuSeparator,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu.tsx";
-import {authRepository} from "@/repositories/auth-repository.ts";
-import {Catalog} from "@/types/catalog";
+import {useCatalogs} from "@/hooks/use-catalogs.ts";
+import {useAuth} from "@/hooks/use-auth.ts";
 
 const AuthLayout = () => {
-    const catalogs = useLoaderData() as Catalog[]
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [currentUser, setCurrentUser] = useState<User | null>(null)
+    const {catalogs} = useCatalogs()
+    const {currentUser, doLogout} = useAuth()
 
-    useEffect(() => {
-        authRepository.onAuthStateChanged((user) => {
-            setCurrentUser(user)
-            setIsLoading(false)
-        })
-    }, [])
-
-    const doLogout = async () => {
-        await authRepository.logout()
-    }
-
-    if (isLoading) return <div/>
     if (!currentUser) return <Navigate to='/login'/>
 
     return (

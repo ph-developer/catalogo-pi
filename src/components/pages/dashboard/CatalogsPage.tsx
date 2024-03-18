@@ -1,27 +1,28 @@
-import {useLoaderData, useNavigate} from "react-router-dom";
 import {Catalog} from "@/types/catalog";
 import {EditCatalogDialog} from "@/components/dialogs/EditCatalogDialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {catalogRepository} from "@/repositories/catalog-repository.ts";
 import {useNotifications} from "@/hooks/use-notifications.tsx";
 import {CatalogsTable} from "@/components/partials/dashboard/catalogs/CatalogsTable.tsx";
+import {useCatalogs} from "@/hooks/use-catalogs.ts";
 
 const CatalogsPage = () => {
-    const catalogs = useLoaderData() as Catalog[]
-    const navigate = useNavigate()
+    const {catalogs, insertCatalog, updateCatalog, deleteCatalog} = useCatalogs()
     const {notifySuccess} = useNotifications()
 
-    const saveCatalog = async (old: Catalog | null, catalog: Catalog) => {
-        await catalogRepository.upsertCatalog(old, catalog)
-        notifySuccess('Catálogo ' + (old ? 'atualizado.' : 'criado.'))
-        navigate(0) // TODO: remove refresh
+    const onSaveCatalog = async (old: Catalog | null, catalog: Catalog) => {
+        if (old) {
+            await updateCatalog(old, catalog)
+            notifySuccess('Catálogo atualizado.')
+        }        else {
+            await insertCatalog(catalog)
+            notifySuccess('Catálogo criado.')
+        }
     }
 
-    const deleteCatalog = async (catalog: Catalog) => {
+    const onDeleteCatalog = async (catalog: Catalog) => {
         if (catalog.id) {
-            await catalogRepository.deleteCatalog(catalog.id)
+            await deleteCatalog(catalog.id)
             notifySuccess('Catálogo excluído.')
-            navigate(0) // TODO: remove refresh
         }
     }
 
@@ -29,7 +30,7 @@ const CatalogsPage = () => {
         <section>
             <div className="flex flex-col pt-6 container mx-auto">
                 <div className="flex justify-end py-2">
-                    <EditCatalogDialog onSaveCatalog={saveCatalog}>
+                    <EditCatalogDialog onSaveCatalog={onSaveCatalog}>
                         <Button className="text-sm">
                             Novo Catálogo
                         </Button>
@@ -38,8 +39,8 @@ const CatalogsPage = () => {
                 <div className="bg-white border rounded-xl shadow-sm">
                     <CatalogsTable
                         catalogs={catalogs}
-                        onUpdateCatalog={saveCatalog}
-                        onDeleteCatalog={deleteCatalog}
+                        onUpdateCatalog={onSaveCatalog}
+                        onDeleteCatalog={onDeleteCatalog}
                     />
                 </div>
             </div>
