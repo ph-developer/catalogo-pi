@@ -31,18 +31,10 @@ export const useStorage = () => {
         await deleteObject(bannerRef)
     }
 
-    const replaceImg = async (imgType: ImgType, oldFilename: string|null, newSrc: string|null) => {
-        if (imgType !== 'product' && imgType !== 'banner') return null
-        if (oldFilename === newSrc) return newSrc
-        if (oldFilename) await deleteImg(imgType, oldFilename)
-        return newSrc ? await uploadImg(imgType, newSrc) : null
-    }
-
     return {
         getImgSrc,
         getImgSrcFn,
         uploadImg,
-        deleteImg,
-        replaceImg
+        deleteImg
     }
 }

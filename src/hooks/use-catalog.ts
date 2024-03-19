@@ -1,22 +1,12 @@
 import {useEffect, useState} from "react";
 import {Catalog} from "@/types/catalog";
-import {Category} from "@/types/category";
-import {Product} from "@/types/product";
-import {collection, doc, documentId, limit, onSnapshot, query, where} from "firebase/firestore";
+import {collection, doc, limit, onSnapshot, query, setDoc, where} from "firebase/firestore";
 import {db} from "@/lib/firebase.ts";
 import {catalogParser} from "@/parsers/catalog-parser.ts";
-import {categoryParser} from "@/parsers/category-parser.ts";
-import {productParser} from "@/parsers/product-parser.ts";
 
-export const useCatalog = (by: 'url'|'id', value: string|null = null) => {
-    const [catalog, setCatalog] = useState<Catalog|null>(null)
-    const [categoryIds, setCategoryIds] = useState<string[]>([])
-    const [categories, setCategories] = useState<Category[]>([])
-    const [productIds, setProductIds] = useState<string[]>([])
-    const [products, setProducts] = useState<Product[]>([])
-    const [isLoadingCatalog, setIsLoadingCatalog] = useState<boolean>(true)
-    const [isLoadingCategories, setIsLoadingCategories] = useState<boolean>(true)
-    const [isLoadingProducts, setIsLoadingProducts] = useState<boolean>(true)
+export const useCatalog = (by: 'url' | 'id', value: string | null = null) => {
+    const [catalog, setCatalog] = useState<Catalog | null>(null)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     useEffect(() => {
         const catalogsRef = collection(db, 'catalogs')
@@ -28,90 +18,61 @@ export const useCatalog = (by: 'url'|'id', value: string|null = null) => {
                 } else {
                     setCatalog(catalogParser.fromFirebase(snapshot.docs[0]))
                 }
-                setIsLoadingCatalog(false)
+                setIsLoading(false)
             })
         } else if (by === 'id' && value) {
             const catalogRef = doc(catalogsRef, value)
             return onSnapshot(catalogRef, (snapshot) => {
-                if (snapshot.exists()) {
+                if (!snapshot.exists()) {
                     setCatalog(null)
                 } else {
                     setCatalog(catalogParser.fromFirebase(snapshot))
                 }
-                setIsLoadingCatalog(false)
+                setIsLoading(false)
             })
         } else if (!value) {
-            setIsLoadingCatalog(false)
+            setIsLoading(false)
         }
     }, [by, value])
 
-    useEffect(() => {
-        if (isLoadingCatalog) return
-        if (!catalog && categoryIds.length > 0) {
-            setCategoryIds([])
-            setIsLoadingCategories(false)
-        } else if (catalog && catalog.categoryIds.diff(categoryIds).length > 0) {
-            setCategoryIds(catalog.categoryIds)
-        } else {
-            setIsLoadingCategories(false)
-        }
-        if (!catalog && productIds.length > 0) {
-            setProductIds([])
-            setIsLoadingProducts(false)
-        } else if (catalog && catalog.productIds.diff(productIds).length > 0) {
-            setProductIds(catalog.productIds)
-        } else {
-            setIsLoadingProducts(false)
-        }
-    }, [isLoadingCatalog, catalog, categoryIds, productIds])
+    const updateCatalog = async (catalog: Catalog) => {
+        if (!catalog.id) return
+        const catalogsRef = collection(db, 'catalogs')
+        const catalogRef = doc(catalogsRef, catalog.id)
+        delete catalog.id
+        await setDoc(catalogRef, catalog)
+    }
 
-    useEffect(() => {
-        if (!categoryIds.length) return
-        const categoriesRef = collection(db, 'categories')
-        const categoriesQuery = query(categoriesRef, where(documentId(), 'in', categoryIds))
-        return onSnapshot(categoriesQuery, (snapshot) => {
-            if (snapshot.empty) {
-                setCategories([])
-            } else {
-                setCategories(snapshot.docs.map(categoryParser.fromFirebase))
-            }
-            setIsLoadingCategories(false)
-        })
-    }, [categoryIds])
+    const addProductIdToCatalog = async (id: string) => {
+        if (!catalog || catalog.productIds.includes(id)) return
+        const productIds = [...catalog.productIds, id]
+        await updateCatalog({...catalog, productIds})
+    }
 
-    useEffect(() => {
-        if (!productIds.length) return
-        const productsRef = collection(db, 'products')
-        const productsQuery = query(productsRef, where(documentId(), 'in', productIds))
-        return onSnapshot(productsQuery, (snapshot) => {
-            if (snapshot.empty) {
-                setProducts([])
-            } else {
-                setProducts(snapshot.docs.map(productParser.fromFirebase))
-            }
-            setIsLoadingProducts(false)
-        })
-    }, [productIds])
+    const removeProductIdFromCatalog = async (id: string) => {
+        if (!catalog ||!catalog.productIds.includes(id)) return
+        const productIds = catalog.productIds.filter((productId) => productId!== id)
+        await updateCatalog({...catalog, productIds})
+    }
 
-    const computedProducts: Product[] = products.map((product) => ({
-        ...product,
-        categories: product.categoryIds.map(
-            (id) => categories.find(
-                (category) => category.id === id
-            )
-        ).filter((category) => !!category) as Category[]
-    }))
+    const addCategoryIdToCatalog = async (id: string) => {
+        if (!catalog || catalog.categoryIds.includes(id)) return
+        const categoryIds = [...catalog.categoryIds, id]
+        await updateCatalog({...catalog, categoryIds})
+    }
 
-    const computedCatalog: Catalog|null = !catalog ? null : {
-        ...catalog,
-        categories,
-        products: computedProducts
+    const removeCategoryIdFromCatalog = async (id: string) => {
+        if (!catalog ||!catalog.categoryIds.includes(id)) return
+        const categoryIds = catalog.categoryIds.filter((categoryId) => categoryId!== id)
+        await updateCatalog({...catalog, categoryIds})
     }
 
     return {
-        catalog: computedCatalog,
-        products: computedProducts,
-        categories,
-        isLoading: isLoadingCatalog || isLoadingCategories || isLoadingProducts
+        catalog,
+        isLoading,
+        addProductIdToCatalog,
+        removeProductIdFromCatalog,
+        addCategoryIdToCatalog,
+        removeCategoryIdFromCatalog
     }
 }

@@ -8,13 +8,16 @@ import { LazyLoadImg } from '@/components/ui/lazy-load-img.tsx'
 import {colors} from "@/lib/colors.ts";
 import {Catalog} from "@/types/catalog";
 import {useStorage} from "@/hooks/use-storage.ts";
+import {mapProductCategories} from "@/mappers/map-product-categories.ts";
+import {Category} from "@/types/category";
 
 interface Props {
     catalog: Catalog
+    categories: Category[]
     product: Product
 }
 
-export const CatalogItem = ({ catalog, product }: Props) => {
+export const CatalogItem = ({ catalog, categories, product }: Props) => {
     const {getImgSrcFn} = useStorage()
     const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null)
     const [currentImg, setCurrentImg] = useState<number | null>(null)
@@ -74,7 +77,7 @@ export const CatalogItem = ({ catalog, product }: Props) => {
                         {product.description}
                     </p>
                     <div className="flex flex-wrap">
-                        {product.categories?.map((category) => (
+                        {mapProductCategories(product, categories).sortBy('name').map((category) => (
                             <Badge key={`${product.id}_${category.id}`} className="mb-1 mr-1 select-none">
                                 {category.name}
                             </Badge>

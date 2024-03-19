@@ -12,8 +12,8 @@ import {useCatalogs} from "@/hooks/use-catalogs.ts";
 import {useAuth} from "@/hooks/use-auth.ts";
 
 const AuthLayout = () => {
-    const {catalogs} = useCatalogs()
     const {currentUser, doLogout} = useAuth()
+    const {catalogs} = useCatalogs(currentUser?.catalogIds)
 
     if (!currentUser) return <Navigate to='/login'/>
 
@@ -46,7 +46,7 @@ const AuthLayout = () => {
                                 {catalogs.length > 0 && <DropdownMenuSeparator/>}
                                 {catalogs.map((catalog) => (
                                     <DropdownMenuItem key={`manu_${catalog.id}`} asChild>
-                                        <Link className="cursor-pointer" to={`/dash/catalogs/${catalog.url}`}>
+                                        <Link className="cursor-pointer" to={`/dash/catalogs/${catalog.id}`}>
                                             {catalog.name}
                                         </Link>
                                     </DropdownMenuItem>

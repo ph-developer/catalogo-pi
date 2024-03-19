@@ -19,7 +19,7 @@ export const CatalogCategoryFilters = ({catalog, categories, onCategoryClick }: 
                 Filtros
             </p>
             <div className="flex flex-auto flex-wrap">
-                {categories.map((category) => (
+                {categories.sortBy('name').map((category) => (
                     <Badge key={category.id} className="flex w-fit mb-1 mr-1 items-center">
                         <span className="mr-1 select-none">
                             {category.name}

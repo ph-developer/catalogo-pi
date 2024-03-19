@@ -18,7 +18,8 @@ interface Props {
 export const CatalogsTable = ({catalogs, onUpdateCatalog, onDeleteCatalog}: Props) => {
     const {getImgSrcFn} = useStorage()
 
-    return (<Table>
+    return (
+        <Table>
             <TableHeader>
                 <TableRow>
                     <TableHead>Catálogo</TableHead>

@@ -10,13 +10,29 @@ import {CatalogCompanyBanner} from "@/components/partials/public/catalog/Catalog
 import {useCatalog} from "@/hooks/use-catalog.ts";
 import {usePageTitle} from "@/hooks/use-page-title.ts";
 import {useBgColor} from "@/hooks/use-bg-color.ts";
+import {useProducts} from "@/hooks/use-products.ts";
+import {useCategories} from "@/hooks/use-categories.ts";
 
 const CatalogPage = () => {
     const {catalogUrl} = useParams()
-    const {catalog, isLoading} = useCatalog('url', catalogUrl!) // todo: view '!'
+    const {catalog, isLoading: isLoadingCatalog} = useCatalog('url', catalogUrl)
+    const {products, isLoading: isLoadingProducts} = useProducts(catalog?.productIds)
+    const {categories, isLoading: isLoadingCategories} = useCategories(catalog?.categoryIds)
     const [categoryFilterIds, setCategoryFilterIds] = useState<string[]>([])
 
-    const products = useMemo(() => catalog?.products || [], [catalog])
+    useBgColor(catalog?.bannerDominantColor)
+    usePageTitle(catalog?.name)
+
+    const isLoading = useMemo(() => {
+        return isLoadingCatalog || isLoadingProducts || isLoadingCategories
+    }, [isLoadingCatalog, isLoadingProducts, isLoadingCategories])
+
+    const categoryFilters = useMemo(() => {
+        return categories?.filter(
+            (category) => categoryFilterIds.includes(category.id!)
+        ) || []
+    }, [categories, categoryFilterIds])
+
     const filteredProducts = useMemo(() => {
         if (!categoryFilterIds.length) return products
         return products.filter(
@@ -24,26 +40,23 @@ const CatalogPage = () => {
         )
     }, [categoryFilterIds, products])
 
+    if (isLoading) return <></>
+
+    if (!catalog) return <CatalogNotFound/>
+
     const addCategoryFilter = (category: Category) => {
-        if (!categoryFilterIds.includes(category.id)) {
-            const ids = [...categoryFilterIds, category.id]
+        if (!categoryFilterIds.includes(category.id!)) {
+            const ids = [...categoryFilterIds, category.id!]
             setCategoryFilterIds(ids)
         }
     }
 
     const removeCategoryFilter = (category: Category) => {
-        if (categoryFilterIds.includes(category.id)) {
+        if (categoryFilterIds.includes(category.id!)) {
             const ids = categoryFilterIds.filter((id) => id !== category.id)
             setCategoryFilterIds(ids)
         }
     }
-
-    useBgColor(catalog?.bannerDominantColor)
-    usePageTitle(catalog?.name)
-
-    if (isLoading) return <></>
-
-    if (!catalog) return <CatalogNotFound/>
 
     return (
         <section>
@@ -60,25 +73,28 @@ const CatalogPage = () => {
                     {!!categoryFilterIds.length && (
                         <CatalogCategoryFilters
                             catalog={catalog}
-                            categories={catalog.categories?.filter(
-                                (c) => categoryFilterIds.includes(c.id)
-                            ) || []}
+                            categories={categoryFilters}
                             onCategoryClick={removeCategoryFilter}
                         />
                     )}
 
-                    {!!catalog.categories?.length && (
+                    {!!categories?.length && (
                         <CatalogCategories
                             catalog={catalog}
                             products={filteredProducts}
-                            categories={catalog.categories}
+                            categories={categories}
                             onCategoryClick={addCategoryFilter}
                         />
                     )}
                 </div>
                 <div className="flex flex-col w-full">
                     {filteredProducts.map((product) => (
-                        <CatalogItem key={product.id} catalog={catalog} product={product}/>
+                        <CatalogItem
+                            key={product.id}
+                            catalog={catalog}
+                            product={product}
+                            categories={categories}
+                        />
                     ))}
                 </div>
             </div>
