@@ -6,6 +6,7 @@ import {auth, db} from "@/lib/firebase.ts";
 import {User} from "@/types/user";
 import {doc, onSnapshot} from "firebase/firestore";
 import {userParser} from "@/parsers/user-parser.ts";
+import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
 
 interface Props {
     children: ReactElement
@@ -38,7 +39,7 @@ export const AuthContextProvider = ({children}: Props) => {
         }
     }, [isAuthenticating, firebaseUser]);
 
-    if (isLoading) return (<></>)
+    if (isLoading) return <LoaderDimmer/>
 
     return (
         <AuthContext.Provider value={currentUser}>

@@ -10,6 +10,7 @@ import {useStorage} from "@/hooks/use-storage.ts";
 import {useUser} from "@/hooks/use-user.ts";
 import {useAuth} from "@/hooks/use-auth.ts";
 import {useMemo} from "react";
+import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
 
 const CatalogsPage = () => {
     useBgColor()
@@ -25,7 +26,7 @@ const CatalogsPage = () => {
         return isLoadingCatalogs
     }, [isLoadingCatalogs])
 
-    if (isLoading || !currentUser) return <></>
+    if (isLoading || !currentUser) return <LoaderDimmer/>
 
     const onSaveCatalog = async (old: Catalog | null, catalog: Catalog) => {
         if (old) {

@@ -18,6 +18,7 @@ import {useMemo} from "react";
 import {EditCategoriesDialog} from "@/components/dialogs/EditCategoriesDialog.tsx";
 import {Category} from "@/types/category";
 import {mapProductCategories} from "@/mappers/map-product-categories.ts";
+import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
 
 const CatalogPage = () => {
     const {catalogId} = useParams()
@@ -47,7 +48,7 @@ const CatalogPage = () => {
         return isLoadingCatalog || isLoadingProducts || isLoadingCategories
     }, [isLoadingCatalog, isLoadingProducts, isLoadingCategories])
 
-    if (isLoading || !currentUser || !catalogId) return <></>
+    if (isLoading || !currentUser || !catalogId) return <LoaderDimmer/>
 
     if (!catalog || !currentUser.catalogIds.includes(catalogId)) return <CatalogNotFound/>
 

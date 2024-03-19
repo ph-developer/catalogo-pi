@@ -12,6 +12,7 @@ import {usePageTitle} from "@/hooks/use-page-title.ts";
 import {useBgColor} from "@/hooks/use-bg-color.ts";
 import {useProducts} from "@/hooks/use-products.ts";
 import {useCategories} from "@/hooks/use-categories.ts";
+import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
 
 const CatalogPage = () => {
     const {catalogUrl} = useParams()
@@ -40,7 +41,7 @@ const CatalogPage = () => {
         )
     }, [categoryFilterIds, products])
 
-    if (isLoading) return <></>
+    if (isLoading) return <LoaderDimmer/>
 
     if (!catalog) return <CatalogNotFound/>
 

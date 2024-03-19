@@ -3,12 +3,13 @@ import {Button} from "@/components/ui/button"
 import {Icons} from "@/components/ui/icons"
 import {colors} from "@/lib/colors.ts";
 import {useCatalog} from "@/hooks/use-catalog.ts";
+import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
 
 const PublicLayout = () => {
     const {catalogUrl} = useParams()
     const {catalog, isLoading} = useCatalog('url', catalogUrl)
 
-    if (catalogUrl && isLoading) return <></>
+    if (catalogUrl && isLoading) return <LoaderDimmer/>
 
     return (
         <>
