@@ -35,7 +35,9 @@ export const CatalogsTable = ({catalogs, onUpdateCatalog, onDeleteCatalog}: Prop
                 {catalogs.map((catalog) => (
                     <TableRow key={catalog.id}>
                         <TableCell>
-                            {catalog.name}
+                            <Link className="font-semibold" to={`/dash/catalogs/${catalog.id}`}>
+                                {catalog.name}
+                            </Link>
                         </TableCell>
                         <TableCell>
                             {catalog.company}
