@@ -29,7 +29,7 @@ export const ImgPreview = ({imgSrc, className, closeable = false, onClose}: Prop
     return (
         <div className={cn(
             className,
-            'border rounded-md border-dashed',
+            'border rounded-md border-dashed overflow-hidden',
             {
                 'relative': isLoaded,
                 'border-slate-500 bg-slate-50': isLoaded,

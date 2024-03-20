@@ -20,6 +20,8 @@ import {Category} from "@/types/category";
 import {mapProductCategories} from "@/mappers/map-product-categories.ts";
 import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
 import {UrlQrCodeDialog} from "@/components/dialogs/UrlQrCodeDialog.tsx";
+import {EditProductPhotosDialog} from "@/components/dialogs/EditProductPhotosDialog.tsx";
+import {useStorage} from "@/hooks/use-storage.ts";
 
 const CatalogPage = () => {
     const {catalogId} = useParams()
@@ -41,6 +43,7 @@ const CatalogPage = () => {
         deleteProduct
     } = useProducts(catalog?.productIds)
     const {categories, isLoading: isLoadingCategories, insertCategory, deleteCategory} = useCategories(catalog?.categoryIds)
+    const {uploadImg, deleteImg} = useStorage()
 
     usePageTitle(catalog?.name)
     useBgColor()
@@ -65,6 +68,29 @@ const CatalogPage = () => {
             } else {
                 notifyError('Ocorreu um erro ao criar o produto.')
             }
+        }
+    }
+
+    const onSavePhotos = async (old: Product, photoUrls: string[]) => {
+        const diffPhotoUrls = photoUrls.symDiff(old.photos)
+        if (!diffPhotoUrls.length) return
+
+        const photos = [...old.photos]
+        for (const photoUrl of diffPhotoUrls) {
+            if (photoUrl.startsWith('blob:')) {
+                const url = await uploadImg('product', photoUrl)
+                if (url) photos.push(url)
+            } else {
+                await deleteImg('product', photoUrl)
+                photos.splice(photos.indexOf(photoUrl), 1)
+            }
+        }
+
+        const result = await updateProduct({...old, photos})
+        if (result) {
+            notifySuccess('Fotos atualizadas.')
+        } else {
+            notifyError('Ocorreu um erro ao atualizar as fotos.')
         }
     }
 
@@ -188,6 +214,26 @@ const CatalogPage = () => {
                                     </TableCell>
                                     <TableCell className="whitespace-nowrap">
                                         <div className="flex items-center justify-center space-x-1.5 align-middle">
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger>
+                                                        <EditProductPhotosDialog
+                                                            product={product}
+                                                            onSavePhotos={onSavePhotos}
+                                                        >
+                                                            <div>
+                                                                <Icons.image
+                                                                    className="w-3.5 h-3.5 cursor-pointer"
+                                                                />
+                                                            </div>
+                                                        </EditProductPhotosDialog>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Fotos</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+
                                             <TooltipProvider>
                                                 <Tooltip>
                                                     <TooltipTrigger>

@@ -8,7 +8,6 @@ export const productParser = {
         id: doc.id,
         name: doc.get('name'),
         description: doc.get('description'),
-        categories: doc.get('categories'),
         photos: doc.get('photos'),
         categoryIds: doc.get('categoryIds'),
     })

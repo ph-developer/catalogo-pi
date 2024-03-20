@@ -38,7 +38,6 @@ export const EditProductDialog = ({children, product = null, categories = [], on
     const [name, setName] = useState<string>(product?.name || '')
     const [description, setDescription] = useState<string>(product?.description || '')
     const [categoryIds, setCategoryIds] = useState<string[]>(product?.categoryIds || [])
-    // TODO: add photos
 
     const reload = (open: boolean) => {
         if (open) {
