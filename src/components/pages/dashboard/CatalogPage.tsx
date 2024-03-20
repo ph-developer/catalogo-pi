@@ -1,4 +1,4 @@
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useCatalog} from "@/hooks/use-catalog.ts";
 import {CatalogNotFound} from "@/components/partials/public/catalog/CatalogNotFound.tsx";
 import {useAuth} from "@/hooks/use-auth.ts";
@@ -19,6 +19,7 @@ import {EditCategoriesDialog} from "@/components/dialogs/EditCategoriesDialog.ts
 import {Category} from "@/types/category";
 import {mapProductCategories} from "@/mappers/map-product-categories.ts";
 import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
+import {UrlQrCodeDialog} from "@/components/dialogs/UrlQrCodeDialog.tsx";
 
 const CatalogPage = () => {
     const {catalogId} = useParams()
@@ -105,8 +106,39 @@ const CatalogPage = () => {
         <section>
             <div className="flex flex-col pt-6 container mx-auto">
                 <div className="flex items-center">
-                    <div className="font-semibold mr-auto">
-                        Catálogo: <span className="font-normal">{catalog?.name}</span>
+                    <div className="font-semibold mr-2">
+                        {catalog?.name}
+                    </div>
+                    <div className="flex space-x-2 items-center mr-auto">
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Link to={`/${catalog.url}`} target="_blank">
+                                        <Icons.open className="w-3.5 h-3.5 mt-0.5 cursor-pointer stroke-primary"/>
+                                    </Link>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Abrir "{catalog.url}"</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <div className="mt-1">
+                                        <UrlQrCodeDialog url={catalog.url}>
+                                            <Icons.qrCode
+                                                className="w-3.5 h-3.5 cursor-pointer stroke-primary"
+                                            />
+                                        </UrlQrCodeDialog>
+                                    </div>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>QR Code</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                     </div>
                     <div className="flex justify-end py-2 space-x-2">
                         <EditCategoriesDialog
