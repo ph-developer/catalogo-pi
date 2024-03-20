@@ -1,4 +1,4 @@
-import {ChangeEventHandler, ReactElement, useEffect, useState} from "react";
+import {ReactElement, useState} from "react";
 import {Catalog} from "@/types/catalog";
 import {
     Dialog, DialogClose,
@@ -14,10 +14,9 @@ import {Input} from "@/components/ui/input.tsx";
 import {withMask} from "use-mask-input";
 import {z} from "zod";
 import {useNotifications} from "@/hooks/use-notifications.tsx";
-import {LazyLoadImg} from "@/components/ui/lazy-load-img.tsx";
-import {Icons} from "@/components/ui/icons.tsx";
-import {colors} from "@/lib/colors.ts";
 import {useStorage} from "@/hooks/use-storage.ts";
+import {ImgInput} from "@/components/ui/img-input.tsx";
+import {ImgPreview} from "@/components/ui/img-preview.tsx";
 
 interface Props {
     children: ReactElement
@@ -55,7 +54,6 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
     const [address, setAddress] = useState<string>(catalog?.address || '')
     const [whatsapp, setWhatsapp] = useState<string>(catalog?.whatsapp || '')
     const [banner, setBanner] = useState<string | null>(catalog?.banner || null)
-    const [bannerInputValue, setBannerInputValue] = useState<string>('')
     const [bannerDominantColor, setBannerDominantColor] = useState<string | null>(catalog?.bannerDominantColor || null)
 
     const reload = (open: boolean) => {
@@ -67,7 +65,6 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
             setAddress(catalog?.address || '')
             setWhatsapp(catalog?.whatsapp || '')
             setBanner(catalog?.banner || null)
-            setBannerInputValue('')
             setBannerDominantColor(catalog?.bannerDominantColor || null)
         }
         setIsOpen(open)
@@ -98,21 +95,15 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
         setIsLoading(false)
     }
 
-    const onChangeBanner: ChangeEventHandler<HTMLInputElement> = async (e) => {
-        const file = e.target.files?.item(0) || null
-        const fileUrl = file ? '' + URL.createObjectURL(file) : null
-        const dominantColor = fileUrl ? await colors.getDominantColor(fileUrl) : null
+    const onSelectImage = (fileUrl: string, dominantColor: string|null) => {
         setBanner(fileUrl)
-        setBannerInputValue(e.target.value)
         setBannerDominantColor(dominantColor)
     }
 
-    useEffect(() => {
-        if (banner === null) {
-            setBannerInputValue('')
-            setBannerDominantColor(null)
-        }
-    }, [banner]);
+    const onDeselectImage = () => {
+        setBanner(null)
+        setBannerDominantColor(null)
+    }
 
     return (
         <Dialog open={isOpen} onOpenChange={reload}>
@@ -165,24 +156,17 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
                         </div>
                         <div>
                             <Label htmlFor="banner">Banner</Label>
-                            <div className="flex items-center space-x-2">
-                                <Input id="banner" type="file" accept="image/*" className="cursor-pointer w-full"
-                                       value={bannerInputValue} disabled={isLoading} onChange={onChangeBanner}/>
-                                {!!banner && (
-                                    <Icons.x className="w-4 h-4 cursor-pointer stroke-destructive"
-                                             onClick={() => setBanner(null)}/>
-                                )}
-                            </div>
-                        </div>
-                        {!!banner && (
-                            <div className="flex justify-center border rounded-md border-dashed bg-slate-50">
-                                <LazyLoadImg
-                                    key={banner ?? 'null'}
+                            {!banner ? (
+                                <ImgInput className="h-48" onSelectImage={onSelectImage}/>
+                            ): (
+                                <ImgPreview
                                     imgSrc={banner.startsWith('blob:') ? banner : getImgSrcFn('banner', banner)}
-                                    className="object-contain h-48"
+                                    className="h-48"
+                                    closeable={true}
+                                    onClose={onDeselectImage}
                                 />
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 </div>
 
