@@ -2,7 +2,6 @@ import { Product } from "@/types/product"
 import { Card, CardContent, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from '@/components/ui/badge.tsx'
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, CarouselApi } from '@/components/ui/carousel.tsx'
-import { useMount } from '@/hooks/use-mount.tsx'
 import { useEffect, useState } from "react"
 import { LazyLoadImg } from '@/components/ui/lazy-load-img.tsx'
 import {colors} from "@/lib/colors.ts";
@@ -22,10 +21,6 @@ export const CatalogItem = ({ catalog, categories, product }: Props) => {
     const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null)
     const [currentImg, setCurrentImg] = useState<number | null>(null)
     const [imgLoadedCount, setImgLoadedCount] = useState<number>(0)
-
-    useMount(() => {
-        setImgLoadedCount(0)
-    })
 
     useEffect(() => {
         if (!carouselApi) return
@@ -59,7 +54,7 @@ export const CatalogItem = ({ catalog, categories, product }: Props) => {
                                 </CarouselItem>
                             ))}
                         </CarouselContent>
-                        {product.photos.length > 1 && imgLoadedCount === product.photos.length && (
+                        {product.photos.length > 1 && imgLoadedCount >= product.photos.length && (
                             <>
                                 {currentImg !== 0 && (
                                     <CarouselPrevious className="left-1 w-4 h-4 opacity-50 text-black" />
