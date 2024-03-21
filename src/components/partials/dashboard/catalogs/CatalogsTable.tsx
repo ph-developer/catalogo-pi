@@ -11,7 +11,7 @@ import {useStorage} from "@/hooks/use-storage.ts";
 
 interface Props {
     catalogs: Catalog[]
-    onUpdateCatalog: (old: Catalog|null, catalog: Catalog) => void
+    onUpdateCatalog: (old: Catalog|null, catalog: Catalog) => Promise<void>
     onDeleteCatalog: (catalog: Catalog) => Promise<void>
 }
 
