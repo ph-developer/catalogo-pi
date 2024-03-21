@@ -74,11 +74,12 @@ export const EditProductPhotosDialog = ({children, product, onSavePhotos}: Props
                                     className="h-44 w-40"
                                     imgSrc={photoUrl.startsWith('blob:') ? photoUrl : getImgSrcFn('product', photoUrl)}
                                     closeable={true}
+                                    disabled={isLoading}
                                     onClose={removePhotoUrl(photoUrl)}
                                 />
                             </div>
                         ))}
-                        <ImgInput className="h-44 w-40" onSelectImage={addPhotoUrl}/>
+                        <ImgInput className="h-44 w-40" onSelectImage={addPhotoUrl} disabled={isLoading}/>
                     </div>
                 </div>
 

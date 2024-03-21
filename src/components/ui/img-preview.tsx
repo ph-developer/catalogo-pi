@@ -7,10 +7,11 @@ interface Props {
     imgSrc?: string | (() => Promise<string>)
     className?: string
     closeable?: boolean
+    disabled?: boolean
     onClose?: () => void
 }
 
-export const ImgPreview = ({imgSrc, className, closeable = false, onClose}: Props) => {
+export const ImgPreview = ({imgSrc, className, closeable = false, disabled = false, onClose}: Props) => {
     const [isLoaded, setIsLoaded] = useState<boolean>(false)
     const [src, setSrc] = useState<string | null>(null)
 
@@ -36,8 +37,11 @@ export const ImgPreview = ({imgSrc, className, closeable = false, onClose}: Prop
                 'border-indigo-500 bg-indigo-50': !isLoaded
             },
         )}>
-            {closeable && isLoaded && (
-                <Icons.x onClick={onClose} className="absolute cursor-pointer right-0.5 top-0.5 stroke-destructive"/>
+            {closeable && isLoaded && !disabled && (
+                <Icons.x
+                    onClick={onClose}
+                    className="absolute cursor-pointer right-0.5 top-0.5 stroke-destructive"
+                />
             )}
             <div className='flex flex-col h-full w-full items-center justify-center'>
                 {!isLoaded && (

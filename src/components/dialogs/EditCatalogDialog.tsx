@@ -158,12 +158,13 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
                         <div>
                             <Label htmlFor="banner">Banner</Label>
                             {!banner ? (
-                                <ImgInput className="h-48" onSelectImage={onSelectImage}/>
+                                <ImgInput className="h-48" onSelectImage={onSelectImage} disabled={isLoading}/>
                             ): (
                                 <ImgPreview
                                     imgSrc={banner.startsWith('blob:') ? banner : getImgSrcFn('banner', banner)}
                                     className="h-48"
                                     closeable={true}
+                                    disabled={isLoading}
                                     onClose={onDeselectImage}
                                 />
                             )}

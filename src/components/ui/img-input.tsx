@@ -5,13 +5,13 @@ import {Icons} from "@/components/ui/icons.tsx";
 
 interface Props {
     id?: string
-    onSelectImage: (image: string, dominantColor: string|null) => Promise<void>|void
+    onSelectImage: (image: string, dominantColor: string | null) => Promise<void> | void
     disabled?: boolean
     className?: string
 }
 
 export const ImgInput = ({id, onSelectImage, disabled = false, className = 'h-48'}: Props) => {
-    const inputRef = useRef<HTMLInputElement|null>(null)
+    const inputRef = useRef<HTMLInputElement | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const selectImage = () => {
@@ -45,7 +45,11 @@ export const ImgInput = ({id, onSelectImage, disabled = false, className = 'h-48
             <div className={cn(
                 className,
                 'flex flex-col items-center justify-center',
-                'border rounded-md border-indigo-500 border-dashed bg-indigo-50'
+                'border rounded-md border-dashed',
+                {
+                    'border-indigo-500 bg-indigo-50': !disabled,
+                    'border-slate-500 bg-slate-50': disabled,
+                }
             )}>
                 {isLoading ? (
                     <div className="flex flex-col items-center justify-center">
@@ -53,9 +57,30 @@ export const ImgInput = ({id, onSelectImage, disabled = false, className = 'h-48
                         <div className="text-sm font-semibold text-indigo-500 mt-2">Carregando...</div>
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center justify-center cursor-pointer w-full h-full rounded-md" onClick={selectImage}>
-                        <Icons.image className="w-8 h-8 stroke-indigo-500"/>
-                        <div className="text-sm font-semibold text-indigo-500 mt-2">Selecionar imagem...</div>
+                    <div className={cn(
+                        'flex flex-col items-center justify-center w-full h-full rounded-md',
+                        {
+                            'cursor-pointer': !disabled,
+                            'cursor-not-allowed': disabled
+                        }
+                    )}
+                         onClick={selectImage}>
+                        <Icons.image className={cn(
+                            'w-8 h-8',
+                            {
+                                'stroke-indigo-500': !disabled,
+                                'stroke-slate-500': disabled
+                            }
+                        )}/>
+                        <div className={cn(
+                            'text-sm font-semibold mt-2',
+                            {
+                                'text-indigo-500': !disabled,
+                                'text-slate-500': disabled
+                            }
+                        )}>
+                            Selecionar imagem...
+                        </div>
                     </div>
                 )}
             </div>
