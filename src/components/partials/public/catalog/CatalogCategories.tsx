@@ -26,7 +26,7 @@ export const CatalogCategories = ({ catalog, categories, products, onCategoryCli
                 >
                     {category.name} ({
                         products
-                            .filter((p) => p.categoryIds.includes(category.id))
+                            .filter((p) => p.categoryIds.includes(category.id!))
                             .length
                     })
                 </p>
