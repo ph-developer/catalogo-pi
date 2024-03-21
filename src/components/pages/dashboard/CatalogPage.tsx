@@ -41,8 +41,13 @@ const CatalogPage = () => {
         insertProduct,
         updateProduct,
         deleteProduct
-    } = useProducts(catalog?.productIds)
-    const {categories, isLoading: isLoadingCategories, insertCategory, deleteCategory} = useCategories(catalog?.categoryIds)
+    } = useProducts(isLoadingCatalog ? null : catalog?.productIds || [])
+    const {
+        categories,
+        isLoading: isLoadingCategories,
+        insertCategory,
+        deleteCategory
+    } = useCategories(isLoadingCatalog ? null : catalog?.categoryIds || [])
     const {uploadImg, deleteImg} = useStorage()
 
     usePageTitle(catalog?.name)

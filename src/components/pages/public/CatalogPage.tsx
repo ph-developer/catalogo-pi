@@ -17,8 +17,11 @@ import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
 const CatalogPage = () => {
     const {catalogUrl} = useParams()
     const {catalog, isLoading: isLoadingCatalog} = useCatalog('url', catalogUrl)
-    const {products, isLoading: isLoadingProducts} = useProducts(catalog?.productIds)
-    const {categories, isLoading: isLoadingCategories} = useCategories(catalog?.categoryIds)
+    const {products, isLoading: isLoadingProducts} = useProducts(isLoadingCatalog ? null : (catalog?.productIds || []))
+    const {
+        categories,
+        isLoading: isLoadingCategories
+    } = useCategories(isLoadingCatalog ? null : (catalog?.categoryIds || []))
     const [categoryFilterIds, setCategoryFilterIds] = useState<string[]>([])
 
     useBgColor(catalog?.bannerDominantColor)

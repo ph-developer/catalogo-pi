@@ -9,8 +9,13 @@ export const useCategories = (ids: string[] | null = null) => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     useEffect(() => {
-        if (!ids?.length) {
+        if (!ids) {
+            return
+        } else if (!ids.length && categories.length) {
             setCategories([])
+            setIsLoading(false)
+        } else if (!ids.length) {
+            setIsLoading(false)
         } else {
             const categoriesRef = collection(db, 'categories')
             const categoriesQuery = query(categoriesRef, where(documentId(), 'in', ids))

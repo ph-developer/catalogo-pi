@@ -9,8 +9,13 @@ export const useProducts = (ids: string[] | null = null) => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     useEffect(() => {
-        if (!ids?.length) {
+        if (!ids) {
+            return
+        } else if (!ids.length && products.length) {
             setProducts([])
+            setIsLoading(false)
+        } else if (!ids.length) {
+            setIsLoading(false)
         } else {
             const productsRef = collection(db, 'products')
             const productsQuery = query(productsRef, where(documentId(), 'in', ids))
