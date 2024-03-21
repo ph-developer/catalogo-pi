@@ -2,6 +2,7 @@ import { Category } from "@/types/category"
 import { Product } from "@/types/product"
 import {Catalog} from "@/types/catalog";
 import {colors} from "@/lib/colors.ts";
+import {useMemo} from "react";
 
 interface Props {
     catalog: Catalog
@@ -11,6 +12,15 @@ interface Props {
 }
 
 export const CatalogCategories = ({ catalog, categories, products, onCategoryClick }: Props) => {
+    const categoriesDisplay = useMemo(() => {
+        return categories.map((category: Category) => ({
+            category,
+            productsCount: products
+                .filter((product: Product) => product.categoryIds.includes(category.id!))
+                .length
+        })).filter(({productsCount}) => productsCount > 0)
+    }, [categories, products])
+
     return (
         <div style={catalog?.bannerDominantColor ? {
             color: colors.getTextColor(catalog.bannerDominantColor),
@@ -18,17 +28,13 @@ export const CatalogCategories = ({ catalog, categories, products, onCategoryCli
             <p className="mb-1 text-sm font-medium">
                 Categorias
             </p>
-            {categories.map((category) => (
+            {categoriesDisplay.map(({category, productsCount}) => (
                 <p
                     key={category.id}
                     className="text-sm cursor-pointer"
                     onClick={() => onCategoryClick(category)}
                 >
-                    {category.name} ({
-                        products
-                            .filter((p) => p.categoryIds.includes(category.id!))
-                            .length
-                    })
+                    {category.name} ({productsCount})
                 </p>
             ))}
         </div>
