@@ -5,7 +5,7 @@ import {Label} from "@/components/ui/label.tsx"
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem, DropdownMenuSeparator,
+    DropdownMenuItem,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu.tsx";
 import {useCatalogs} from "@/hooks/use-catalogs.ts";
@@ -30,6 +30,11 @@ const AuthLayout = () => {
                                 Início
                             </Link>
                         </Button>
+                        <Button className="focus-visible:ring-0" variant="ghost" asChild>
+                            <Link className="cursor-pointer" to="/dash/catalogs">
+                                Meus Catálogos
+                            </Link>
+                        </Button>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button className="focus-visible:ring-0" variant="ghost">
@@ -38,12 +43,6 @@ const AuthLayout = () => {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start">
-                                <DropdownMenuItem asChild>
-                                    <Link className="cursor-pointer" to="/dash/catalogs">
-                                        Meus Catálogos
-                                    </Link>
-                                </DropdownMenuItem>
-                                {catalogs.length > 0 && <DropdownMenuSeparator/>}
                                 {catalogs.map((catalog) => (
                                     <DropdownMenuItem key={`manu_${catalog.id}`} asChild>
                                         <Link className="cursor-pointer" to={`/dash/catalogs/${catalog.id}`}>
