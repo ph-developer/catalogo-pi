@@ -1,22 +1,34 @@
 import {
-    AlertDialog, AlertDialogAction, AlertDialogCancel,
+    AlertDialog, AlertDialogCancel,
     AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger
 } from "@/components/ui/alert-dialog.tsx";
-import {ReactElement} from "react";
+import {ReactElement, useState} from "react";
 import {Catalog} from "@/types/catalog";
+import {Button} from "@/components/ui/button.tsx";
+import {Icons} from "@/components/ui/icons.tsx";
 
 interface Props {
     catalog: Catalog
-    onDeleteCatalog: (catalog: Catalog) => void
+    onDeleteCatalog: (catalog: Catalog) => Promise<void>
     children: ReactElement
 }
 
 export const ConfirmDeleteCatalogDialog = ({catalog, children, onDeleteCatalog}: Props) => {
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isOpen, setIsOpen] = useState<boolean>(false)
+
+    const onConfirm = async () => {
+        setIsLoading(true)
+        await onDeleteCatalog(catalog)
+        setIsLoading(false)
+        setIsOpen(false)
+    }
+
     return (
-        <AlertDialog>
+        <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
             <AlertDialogTrigger asChild>
                 {children}
             </AlertDialogTrigger>
@@ -30,15 +42,13 @@ export const ConfirmDeleteCatalogDialog = ({catalog, children, onDeleteCatalog}:
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel>
+                    <AlertDialogCancel disabled={isLoading}>
                         Cancelar
                     </AlertDialogCancel>
-                    <AlertDialogAction
-                        className="bg-destructive hover:bg-destructive/90"
-                        onClick={() => onDeleteCatalog(catalog)}
-                    >
+                    <Button className="bg-destructive hover:bg-destructive/90" onClick={onConfirm} disabled={isLoading}>
+                        {isLoading && <Icons.loader className="mr-2 w-4 h-4 animate-spin" />}
                         Excluir
-                    </AlertDialogAction>
+                    </Button>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

@@ -17,11 +17,12 @@ import {useNotifications} from "@/hooks/use-notifications.tsx";
 import {useStorage} from "@/hooks/use-storage.ts";
 import {ImgInput} from "@/components/ui/img-input.tsx";
 import {ImgPreview} from "@/components/ui/img-preview.tsx";
+import {Icons} from "@/components/ui/icons.tsx";
 
 interface Props {
     children: ReactElement
     catalog?: Catalog|null
-    onSaveCatalog: (old: Catalog | null, catalog: Catalog) => void
+    onSaveCatalog: (old: Catalog | null, catalog: Catalog) => Promise<void>
 }
 
 const formSchema = z.object({
@@ -85,7 +86,7 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
     const saveCatalog = async () => {
         if (!validate()) return
         setIsLoading(true)
-        onSaveCatalog(catalog, {
+        await onSaveCatalog(catalog, {
             name, url, company, cnpj, address, whatsapp, banner, bannerDominantColor,
             id: catalog?.id,
             categoryIds: catalog?.categoryIds || [],
@@ -177,6 +178,7 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
                         </Button>
                     </DialogClose>
                     <Button className="bg-success hover:bg-success/90" onClick={saveCatalog} disabled={isLoading}>
+                        {isLoading && <Icons.loader className="mr-2 w-4 h-4 animate-spin" />}
                         Salvar
                     </Button>
                 </DialogFooter>

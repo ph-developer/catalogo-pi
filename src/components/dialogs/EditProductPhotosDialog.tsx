@@ -13,6 +13,7 @@ import {useStorage} from "@/hooks/use-storage.ts";
 import {ImgInput} from "@/components/ui/img-input.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {cn} from "@/lib/utils.ts";
+import {Icons} from "@/components/ui/icons.tsx";
 
 interface Props {
     product: Product,
@@ -88,6 +89,7 @@ export const EditProductPhotosDialog = ({children, product, onSavePhotos}: Props
                         </Button>
                     </DialogClose>
                     <Button className="bg-success hover:bg-success/90" onClick={savePhotos} disabled={isLoading}>
+                        {isLoading && <Icons.loader className="mr-2 w-4 h-4 animate-spin" />}
                         Salvar
                     </Button>
                 </DialogFooter>

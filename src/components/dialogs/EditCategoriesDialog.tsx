@@ -79,7 +79,8 @@ export const EditCategoriesDialog = ({children, categories, onAddCategory, onRem
                                 <Input id="name" value={name} disabled={isLoading} autoFocus
                                        onChange={(e) => setName(e.currentTarget.value)}/>
                             </div>
-                            <Button onClick={addCategory}>
+                            <Button onClick={addCategory} disabled={isLoading}>
+                                {isLoading && <Icons.loader className="mr-2 w-4 h-4 animate-spin" />}
                                 Adicionar
                             </Button>
                         </div>
@@ -93,7 +94,7 @@ export const EditCategoriesDialog = ({children, categories, onAddCategory, onRem
                                     </span>
                                     <Icons.x
                                         className="h-3 w-3 cursor-pointer"
-                                        onClick={() => removeCategory(category)}
+                                        onClick={() => isLoading ? null : removeCategory(category)}
                                     />
                                 </Badge>
                             ))}

@@ -16,12 +16,13 @@ import {Product} from "@/types/product";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import {Category} from "@/types/category";
 import {Checkbox} from "@/components/ui/checkbox.tsx";
+import {Icons} from "@/components/ui/icons.tsx";
 
 interface Props {
     children: ReactElement
     product?: Product | null
     categories?: Category[]
-    onSaveProduct: (old: Product | null, product: Product) => void
+    onSaveProduct: (old: Product | null, product: Product) => Promise<void>
 }
 
 const formSchema = z.object({
@@ -63,7 +64,7 @@ export const EditProductDialog = ({children, product = null, categories = [], on
     const saveProduct = async () => {
         if (!validate()) return
         setIsLoading(true)
-        onSaveProduct(product, {
+        await onSaveProduct(product, {
             name, description, categoryIds,
             id: product?.id,
             photos: product?.photos || [],
@@ -131,6 +132,7 @@ export const EditProductDialog = ({children, product = null, categories = [], on
                         </Button>
                     </DialogClose>
                     <Button className="bg-success hover:bg-success/90" onClick={saveProduct} disabled={isLoading}>
+                        {isLoading && <Icons.loader className="mr-2 w-4 h-4 animate-spin" />}
                         Salvar
                     </Button>
                 </DialogFooter>
