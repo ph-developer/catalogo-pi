@@ -29,10 +29,14 @@ const CatalogsPage = () => {
     if (isLoading || !currentUser) return <LoaderDimmer/>
 
     const onSaveCatalog = async (old: Catalog | null, catalog: Catalog) => {
-        if (old) {
+        const shouldReplaceBanner = old?.banner !== catalog.banner
+        if (old && shouldReplaceBanner) {
             const banner = catalog.banner ? await uploadImg('banner', catalog.banner) : null
             await updateCatalog({...catalog, banner})
             if (old.banner) await deleteImg('banner', old.banner)
+            notifySuccess('Catálogo atualizado.')
+        } else if (old && !shouldReplaceBanner) {
+            await updateCatalog(catalog)
             notifySuccess('Catálogo atualizado.')
         } else {
             const banner = catalog.banner ? await uploadImg('banner', catalog.banner) : null
