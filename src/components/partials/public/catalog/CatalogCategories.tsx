@@ -1,7 +1,6 @@
 import { Category } from "@/types/category"
 import { Product } from "@/types/product"
 import {Catalog} from "@/types/catalog";
-import {colors} from "@/lib/colors.ts";
 import {useMemo} from "react";
 
 interface Props {
@@ -22,8 +21,8 @@ export const CatalogCategories = ({ catalog, categories, products, onCategoryCli
     }, [categories, products])
 
     return (
-        <div style={catalog?.bannerDominantColor ? {
-            color: colors.getTextColor(catalog.bannerDominantColor),
+        <div style={catalog ? {
+            color: catalog.style.bgTextColor,
         } : {}}>
             <p className="mb-1 text-sm font-medium">
                 Categorias

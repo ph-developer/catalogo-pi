@@ -1,7 +1,7 @@
+import {CatalogStyle} from "@/types/catalog-style";
+
 export interface Catalog {
     id?: string
-    banner: string | null
-    bannerDominantColor: string | null
     name: string
     url: string
     company: string
@@ -10,4 +10,5 @@ export interface Catalog {
     whatsapp: string
     categoryIds: string[]
     productIds: string[]
+    style: CatalogStyle
 }

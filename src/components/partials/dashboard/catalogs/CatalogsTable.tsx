@@ -3,21 +3,20 @@ import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/compon
 import {Link} from "react-router-dom";
 import {Icons} from "@/components/ui/icons.tsx";
 import {UrlQrCodeDialog} from "@/components/dialogs/UrlQrCodeDialog.tsx";
-import {ImgDialog} from "@/components/dialogs/ImgDialog.tsx";
 import {EditCatalogDialog} from "@/components/dialogs/EditCatalogDialog.tsx";
 import {Catalog} from "@/types/catalog";
 import {ConfirmDeleteCatalogDialog} from "@/components/dialogs/ConfirmDeleteCatalogDialog.tsx";
-import {useStorage} from "@/hooks/use-storage.ts";
+import {EditCatalogStyleDialog} from "@/components/dialogs/EditCatalogStyleDialog.tsx";
+import {CatalogStyle} from "@/types/catalog-style";
 
 interface Props {
     catalogs: Catalog[]
     onUpdateCatalog: (old: Catalog|null, catalog: Catalog) => Promise<void>
+    onUpdateStyle: (old: Catalog, catalogStyle: CatalogStyle) => Promise<void>
     onDeleteCatalog: (catalog: Catalog) => Promise<void>
 }
 
-export const CatalogsTable = ({catalogs, onUpdateCatalog, onDeleteCatalog}: Props) => {
-    const {getImgSrcFn} = useStorage()
-
+export const CatalogsTable = ({catalogs, onUpdateCatalog, onDeleteCatalog, onUpdateStyle}: Props) => {
     return (
         <Table>
             <TableHeader>
@@ -83,26 +82,22 @@ export const CatalogsTable = ({catalogs, onUpdateCatalog, onDeleteCatalog}: Prop
                                     </Tooltip>
                                 </TooltipProvider>
 
-                                {catalog.banner ? (
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <div className="mt-1">
-                                                    <ImgDialog src={getImgSrcFn('banner', catalog.banner)}>
-                                                        <Icons.image
-                                                            className="w-3.5 h-3.5 cursor-pointer stroke-primary"
-                                                        />
-                                                    </ImgDialog>
-                                                </div>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>Visualizar Banner</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                ) : (
-                                    <Icons.image className="w-3.5 h-3.5 cursor-not-allowed stroke-primary/50"/>
-                                )}
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <div>
+                                                <EditCatalogStyleDialog catalog={catalog} onSaveStyle={onUpdateStyle}>
+                                                    <div>
+                                                        <Icons.palette className="w-3.5 h-3.5 cursor-pointer stroke-success"/>
+                                                    </div>
+                                                </EditCatalogStyleDialog>
+                                            </div>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Estilos</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
 
                                 <TooltipProvider>
                                     <Tooltip>

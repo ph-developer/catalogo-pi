@@ -9,13 +9,13 @@ interface Props {
 export const CatalogCompanyBanner = ({ catalog }: Props) => {
     const { getImgSrcFn } = useStorage()
 
-    if (!catalog.banner) return (<></>)
+    if (!catalog.style.banner) return (<></>)
 
     return (
         <div className="flex justify-center">
             <LazyLoadImg
                 className="rounded-lg"
-                imgSrc={getImgSrcFn('banner', catalog.banner)}
+                imgSrc={getImgSrcFn('banner', catalog.style.banner)}
             />
         </div>
     )

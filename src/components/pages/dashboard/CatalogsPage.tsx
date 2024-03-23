@@ -11,6 +11,7 @@ import {useUser} from "@/hooks/use-user.ts";
 import {useAuth} from "@/hooks/use-auth.ts";
 import {useMemo} from "react";
 import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
+import {CatalogStyle} from "@/types/catalog-style";
 
 const CatalogsPage = () => {
     useBgColor()
@@ -29,24 +30,34 @@ const CatalogsPage = () => {
     if (isLoading || !currentUser) return <LoaderDimmer/>
 
     const onSaveCatalog = async (old: Catalog | null, catalog: Catalog) => {
-        const shouldReplaceBanner = old?.banner !== catalog.banner
-        if (old && shouldReplaceBanner) {
-            const banner = catalog.banner ? await uploadImg('banner', catalog.banner) : null
-            await updateCatalog({...catalog, banner})
-            if (old.banner) await deleteImg('banner', old.banner)
-            notifySuccess('Catálogo atualizado.')
-        } else if (old && !shouldReplaceBanner) {
+        if (old) {
             await updateCatalog(catalog)
             notifySuccess('Catálogo atualizado.')
         } else {
-            const banner = catalog.banner ? await uploadImg('banner', catalog.banner) : null
-            const catalogId = await insertCatalog({...catalog, banner})
+            const catalogId = await insertCatalog(catalog)
             if (catalogId) {
                 await addCatalogIdToUser(catalogId)
                 notifySuccess('Catálogo criado.')
             } else {
                 notifyError('Ocorreu um erro ao criar o catálogo.')
             }
+        }
+    }
+
+    const onSaveStyle = async (old: Catalog, style: CatalogStyle) => {
+        const shouldReplaceBanner = old.style.banner !== style.banner
+        let result: string|undefined;
+        if (shouldReplaceBanner) {
+            const banner = style.banner ? await uploadImg('banner', style.banner) : null
+            result = await updateCatalog({...old, style: {...style, banner}})
+            if (old.style.banner) await deleteImg('banner', old.style.banner)
+        } else {
+            result = await updateCatalog({...old, style})
+        }
+        if (result) {
+            notifySuccess('Catálogo atualizado.')
+        } else {
+            notifyError('Ocorreu um erro ao criar o catálogo.')
         }
     }
 
@@ -77,6 +88,7 @@ const CatalogsPage = () => {
                         catalogs={catalogs}
                         onUpdateCatalog={onSaveCatalog}
                         onDeleteCatalog={onDeleteCatalog}
+                        onUpdateStyle={onSaveStyle}
                     />
                 </div>
             </div>

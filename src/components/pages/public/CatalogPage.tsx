@@ -24,7 +24,7 @@ const CatalogPage = () => {
     } = useCategories(isLoadingCatalog ? null : (catalog?.categoryIds || []))
     const [categoryFilterIds, setCategoryFilterIds] = useState<string[]>([])
 
-    useBgColor(catalog?.bannerDominantColor)
+    useBgColor(catalog?.style.bgColor)
     usePageTitle(catalog?.name)
 
     const isLoading = useMemo(() => {
@@ -66,7 +66,7 @@ const CatalogPage = () => {
         <section>
             <div className="flex pt-6 container mx-auto">
                 <div className="columns-xs min-w-64 max-w-72 p-2 space-y-6">
-                    {!!catalog.banner && (
+                    {!!catalog.style.banner && (
                         <CatalogCompanyBanner
                             catalog={catalog}
                         />

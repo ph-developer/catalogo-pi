@@ -14,9 +14,6 @@ import {Input} from "@/components/ui/input.tsx";
 import {withMask} from "use-mask-input";
 import {z} from "zod";
 import {useNotifications} from "@/hooks/use-notifications.tsx";
-import {useStorage} from "@/hooks/use-storage.ts";
-import {ImgInput} from "@/components/ui/img-input.tsx";
-import {ImgPreview} from "@/components/ui/img-preview.tsx";
 import {Icons} from "@/components/ui/icons.tsx";
 
 interface Props {
@@ -45,7 +42,6 @@ const formSchema = z.object({
 
 export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Props) => {
     const {notifyError} = useNotifications()
-    const {getImgSrcFn} = useStorage()
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [name, setName] = useState<string>(catalog?.name || '')
@@ -54,8 +50,6 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
     const [cnpj, setCnpj] = useState<string>(catalog?.cnpj || '')
     const [address, setAddress] = useState<string>(catalog?.address || '')
     const [whatsapp, setWhatsapp] = useState<string>(catalog?.whatsapp || '')
-    const [banner, setBanner] = useState<string | null>(catalog?.banner || null)
-    const [bannerDominantColor, setBannerDominantColor] = useState<string | null>(catalog?.bannerDominantColor || null)
 
     const reload = (open: boolean) => {
         if (open) {
@@ -65,8 +59,6 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
             setCnpj(catalog?.cnpj || '')
             setAddress(catalog?.address || '')
             setWhatsapp(catalog?.whatsapp || '')
-            setBanner(catalog?.banner || null)
-            setBannerDominantColor(catalog?.bannerDominantColor || null)
         }
         setIsOpen(open)
     }
@@ -87,23 +79,21 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
         if (!validate()) return
         setIsLoading(true)
         await onSaveCatalog(catalog, {
-            name, url, company, cnpj, address, whatsapp, banner, bannerDominantColor,
+            name, url, company, cnpj, address, whatsapp,
             id: catalog?.id,
             categoryIds: catalog?.categoryIds || [],
             productIds: catalog?.productIds || [],
+            style: catalog?.style || {
+                banner: null,
+                bannerDominantColor: null,
+                bgColor: '#f8fafc',
+                bgTextColor: '#000',
+                accentColor: '#fff',
+                accentTextColor: '#000',
+            }
         })
         setIsOpen(false)
         setIsLoading(false)
-    }
-
-    const onSelectImage = (fileUrl: string, dominantColor: string|null) => {
-        setBanner(fileUrl)
-        setBannerDominantColor(dominantColor)
-    }
-
-    const onDeselectImage = () => {
-        setBanner(null)
-        setBannerDominantColor(null)
     }
 
     return (
@@ -154,20 +144,6 @@ export const EditCatalogDialog = ({children, catalog = null, onSaveCatalog}: Pro
                             <Input id="whatsapp" value={whatsapp} disabled={isLoading}
                                    ref={withMask(['+99 99 9999-9999', '+99 99 99999-9999'], {autoUnmask: true})}
                                    onChange={(e) => setWhatsapp(e.currentTarget.value)}/>
-                        </div>
-                        <div>
-                            <Label htmlFor="banner">Banner</Label>
-                            {!banner ? (
-                                <ImgInput className="h-48" onSelectImage={onSelectImage} disabled={isLoading}/>
-                            ): (
-                                <ImgPreview
-                                    imgSrc={banner.startsWith('blob:') ? banner : getImgSrcFn('banner', banner)}
-                                    className="h-48"
-                                    closeable={true}
-                                    disabled={isLoading}
-                                    onClose={onDeselectImage}
-                                />
-                            )}
                         </div>
                     </div>
                 </div>

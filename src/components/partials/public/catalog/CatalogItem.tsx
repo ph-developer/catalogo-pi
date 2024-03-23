@@ -20,7 +20,6 @@ export const CatalogItem = ({ catalog, categories, product }: Props) => {
     const {getImgSrcFn} = useStorage()
     const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null)
     const [currentImg, setCurrentImg] = useState<number | null>(null)
-    const [imgLoadedCount, setImgLoadedCount] = useState<number>(0)
 
     useEffect(() => {
         if (!carouselApi) return
@@ -30,15 +29,11 @@ export const CatalogItem = ({ catalog, categories, product }: Props) => {
         })
     }, [carouselApi])
 
-    const incImgLoadedCount = () => {
-        setImgLoadedCount(imgLoadedCount + 1)
-    }
-
     return (
-        <Card className="w-auto mx-2 mt-2" style={catalog?.bannerDominantColor ? {
-            backgroundColor: colors.getDarkenColor(catalog.bannerDominantColor, 2.5),
-            color: colors.getTextColor(catalog.bannerDominantColor),
-            borderColor: colors.getDarkenColor(catalog.bannerDominantColor, 4)
+        <Card className="w-auto mx-2 mt-2" style={catalog ? {
+            backgroundColor: catalog.style.accentColor,
+            color: catalog.style.accentTextColor,
+            borderColor: colors.getDarkenColor(catalog.style.accentColor, 1.5),
         } : {}}>
             <CardContent className="flex p-6 space-x-6">
                 <div className="min-w-40 w-40">
@@ -48,13 +43,12 @@ export const CatalogItem = ({ catalog, categories, product }: Props) => {
                                 <CarouselItem key={photoId}>
                                     <LazyLoadImg
                                         imgSrc={getImgSrcFn('product', photoId)}
-                                        onIsLoaded={incImgLoadedCount}
                                         className="h-44 w-40 rounded-xl object-cover"
                                     />
                                 </CarouselItem>
                             ))}
                         </CarouselContent>
-                        {product.photos.length > 1 && imgLoadedCount >= product.photos.length && (
+                        {product.photos.length > 1 && (
                             <>
                                 {currentImg !== 0 && (
                                     <CarouselPrevious className="left-1 w-4 h-4 opacity-50 text-black" />

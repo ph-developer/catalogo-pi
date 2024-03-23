@@ -6,8 +6,6 @@ export const catalogParser = {
         doc: QueryDocumentSnapshot| DocumentSnapshot,
     ): Catalog => ({
         id: doc.id,
-        banner: doc.get('banner'),
-        bannerDominantColor: doc.get('bannerDominantColor'),
         name: doc.get('name'),
         url: doc.get('url'),
         company: doc.get('company'),
@@ -16,5 +14,6 @@ export const catalogParser = {
         whatsapp: doc.get('whatsapp'),
         categoryIds: doc.get('categoryIds'),
         productIds: doc.get('productIds'),
+        style: doc.get('style'),
     })
 }
