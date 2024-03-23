@@ -28,6 +28,7 @@ export const useProducts = (ids: string[] | null = null) => {
                 setIsLoading(false)
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ids])
 
     const insertProduct = async (product: Product) => {

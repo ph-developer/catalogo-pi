@@ -23,7 +23,8 @@ Array.prototype.sortBy = function <T extends object>(this: T[], property: keyof 
     return this.sort((a, b) => {
         if (typeof a !== "object" || typeof b !== "object") return 0
         if (a === null || b === null) return 0
-        if (!a.hasOwnProperty(property) || !b.hasOwnProperty(property)) return 0
+        if (!Object.prototype.hasOwnProperty.call(a, property)) return 0
+        if (!Object.prototype.hasOwnProperty.call(b, property)) return 0
         if (a[property] < b[property]) return -1
         if (a[property] > b[property]) return 1
         return 0

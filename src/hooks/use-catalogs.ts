@@ -11,7 +11,7 @@ export const useCatalogs = (ids: string[]|null = null) => {
     useEffect(() => {
         if (!ids) {
             return
-        } else if (!ids?.length && catalogs.length) {
+        } else if (!ids.length && catalogs.length) {
             setCatalogs([])
             setIsLoading(false)
         } else if (!ids.length) {
@@ -28,6 +28,7 @@ export const useCatalogs = (ids: string[]|null = null) => {
                 setIsLoading(false)
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ids])
 
     const insertCatalog = async (catalog: Catalog) => {
