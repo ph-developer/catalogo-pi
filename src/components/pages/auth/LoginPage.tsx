@@ -72,6 +72,9 @@ const LoginPage = () => {
                             Entrar
                         </Button>
                     </div>
+                    <div className="text-sm">
+                        Ainda não possui cadastro? <Link to="/register" className="hover:underline">Cadastre-se</Link>!
+                    </div>
                 </form>
             </div>
         </div>

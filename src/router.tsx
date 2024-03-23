@@ -36,6 +36,20 @@ export const router = createBrowserRouter([
         ]
     },
     {
+        path: '/register',
+        lazy: async () => ({
+            Component: (await import('@/components/layouts/GuestLayout')).default
+        }),
+        children: [
+            {
+                path: '',
+                lazy: async () => ({
+                    Component: (await import('@/components/pages/auth/RegisterPage.tsx')).default
+                })
+            },
+        ]
+    },
+    {
         path: '/dash',
         lazy: async () => ({
             Component: (await import('@/components/layouts/AuthLayout')).default

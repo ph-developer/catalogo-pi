@@ -1,6 +1,7 @@
 import {useAuthContext} from "@/contexts/use-auth-context";
-import {signInWithEmailAndPassword, signOut} from "firebase/auth";
-import {auth} from "@/lib/firebase.ts";
+import {signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword} from "firebase/auth";
+import {auth, db} from "@/lib/firebase.ts";
+import {collection, doc, setDoc} from "firebase/firestore";
 
 export const useAuth = () => {
     const currentUser = useAuthContext()
@@ -13,9 +14,19 @@ export const useAuth = () => {
         await signOut(auth)
     }
 
+    const doRegister = async (email: string, password: string) => {
+        const {user: {uid: userId}} = await createUserWithEmailAndPassword(auth, email, password)
+        if (userId) {
+            const usersRef = collection(db, 'users')
+            const userRef = doc(usersRef, userId)
+            await setDoc(userRef, {catalogIds: []})
+        }
+    }
+
     return {
         currentUser,
         doLogin,
-        doLogout
+        doLogout,
+        doRegister
     }
 }
