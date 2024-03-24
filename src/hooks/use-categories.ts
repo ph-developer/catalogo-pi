@@ -28,7 +28,6 @@ export const useCategories = (ids: string[] | null = null) => {
                 setIsLoading(false)
             })
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ids])
 
     const insertCategory = async (category: Category) => {
