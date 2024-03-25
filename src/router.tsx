@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import {catalogAnalyticsLoader} from "@/loaders/catalog-analytics-loader.ts";
 
 export const router = createBrowserRouter([
     {
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: ':catalogUrl',
+                loader: catalogAnalyticsLoader,
                 lazy: async () => ({
                     Component: (await import('@/components/pages/public/CatalogPage.tsx')).default
                 })
@@ -22,27 +24,19 @@ export const router = createBrowserRouter([
         ]
     },
     {
-        path: '/login',
+        path: '',
         lazy: async () => ({
             Component: (await import('@/components/layouts/GuestLayout')).default
         }),
         children: [
             {
-                path: '',
+                path: 'login',
                 lazy: async () => ({
                     Component: (await import('@/components/pages/auth/LoginPage.tsx')).default
                 })
             },
-        ]
-    },
-    {
-        path: '/register',
-        lazy: async () => ({
-            Component: (await import('@/components/layouts/GuestLayout')).default
-        }),
-        children: [
             {
-                path: '',
+                path: 'register',
                 lazy: async () => ({
                     Component: (await import('@/components/pages/auth/RegisterPage.tsx')).default
                 })
