@@ -5,7 +5,7 @@ import {useAnalytics} from "@/hooks/use-analytics.ts";
 import {CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
 import {Button} from "@/components/ui/button.tsx";
 import {cn} from "@/lib/utils.ts";
-import {useMount} from "@/hooks/use-mount.tsx";
+import {useResizeScreen} from "@/hooks/use-resize-screen.ts";
 
 interface Props {
     catalogIds?: string[]
@@ -68,18 +68,9 @@ export const CatalogViewsCardChart = ({catalogIds, catalogs, className = ''}: Pr
             .reverse()
     }, [catalogIds, days, catalogViewEvents])
 
-
-    useMount(() => {
-        if (!divRef.current) return
-        const calcChartWidth = () => {
-            const divWidth = divRef.current?.clientWidth
-            if (divWidth) setChartWidth(divWidth - 16)
-        }
-        calcChartWidth()
-        window.addEventListener('resize', calcChartWidth)
-        return () => {
-            window.removeEventListener('resize', calcChartWidth)
-        }
+    useResizeScreen(() => {
+        const divWidth = divRef.current?.clientWidth
+        if (divWidth) setChartWidth(divWidth - 16)
     })
 
     return (

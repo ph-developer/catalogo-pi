@@ -5,6 +5,7 @@ import {useMemo} from "react";
 import {useCatalogs} from "@/hooks/use-catalogs.ts";
 import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
 import {CatalogViewsCardChart} from "@/components/partials/dashboard/index/CatalogViewsCardChart.tsx";
+import {CatalogContentsCardChart} from "@/components/partials/dashboard/index/CatalogContentsCardChart.tsx";
 
 const DashboardPage = () => {
     useBgColor()
@@ -21,10 +22,15 @@ const DashboardPage = () => {
 
     return (
         <section>
-            <div className="flex pt-6 container mx-auto">
+            <div className="flex space-x-2 mb-2 pt-6 container mx-auto">
                 {!!catalogs.length && !!currentUser.catalogIds && (
                     <CatalogViewsCardChart
                         catalogIds={currentUser?.catalogIds}
+                        catalogs={catalogs}
+                    />
+                )}
+                {!!catalogs.length && !!currentUser.catalogIds && (
+                    <CatalogContentsCardChart
                         catalogs={catalogs}
                     />
                 )}
