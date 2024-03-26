@@ -33,7 +33,7 @@ export const ProductsTable = ({products, categories, onSaveProduct, onDeleteProd
                             <div className="font-semibold">
                                 {product.name}
                             </div>
-                            <div>
+                            <div className="whitespace-break-spaces">
                                 <span className="font-semibold">Descrição: </span>{product.description}
                             </div>
                             {!!product.categoryIds.length && (

@@ -62,7 +62,7 @@ export const CatalogItem = ({ catalog, categories, product }: Props) => {
                 </div>
                 <div className="flex flex-col flex-auto space-y-6">
                     <CardTitle>{product.name}</CardTitle>
-                    <p className="text-sm min-h-20 line-clamp-4 text-justify">
+                    <p className="text-sm min-h-20 line-clamp-4 text-justify whitespace-break-spaces">
                         {product.description}
                     </p>
                     <div className="flex flex-wrap">
