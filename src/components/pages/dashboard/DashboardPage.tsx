@@ -6,6 +6,8 @@ import {useCatalogs} from "@/hooks/use-catalogs.ts";
 import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
 import {CatalogViewsCardChart} from "@/components/partials/dashboard/index/CatalogViewsCardChart.tsx";
 import {CatalogContentsCardChart} from "@/components/partials/dashboard/index/CatalogContentsCardChart.tsx";
+import {CatalogActiveUsersCardChart} from "@/components/partials/dashboard/index/CatalogActiveUsersCardChart.tsx";
+import {CatalogUserDevicesCardChart} from "@/components/partials/dashboard/index/CatalogUserDevicesCardChart.tsx";
 
 const DashboardPage = () => {
     useBgColor()
@@ -22,7 +24,7 @@ const DashboardPage = () => {
 
     return (
         <section>
-            <div className="flex space-x-2 mb-2 pt-6 container mx-auto">
+            <div className="flex flex-wrap mb-2 pt-6 container mx-auto">
                 {!!catalogs.length && !!currentUser.catalogIds && (
                     <CatalogViewsCardChart
                         catalogIds={currentUser?.catalogIds}
@@ -30,7 +32,19 @@ const DashboardPage = () => {
                     />
                 )}
                 {!!catalogs.length && !!currentUser.catalogIds && (
+                    <CatalogActiveUsersCardChart
+                        catalogIds={currentUser?.catalogIds}
+                        catalogs={catalogs}
+                    />
+                )}
+                {!!catalogs.length && !!currentUser.catalogIds && (
                     <CatalogContentsCardChart
+                        catalogs={catalogs}
+                    />
+                )}
+                {!!catalogs.length && !!currentUser.catalogIds && (
+                    <CatalogUserDevicesCardChart
+                        catalogIds={currentUser?.catalogIds}
                         catalogs={catalogs}
                     />
                 )}

@@ -55,26 +55,25 @@ export const CatalogContentsCardChart = ({catalogs, className = ''}: Props) => {
     })
 
     return (
-        <div
-            className={cn(
-                "flex flex-col justify-center items-start w-1/2 h-96 bg-white border rounded-xl shadow-sm",
-                className
-            )}
-            ref={divRef}
-        >
-            <div className="flex items-center justify-center w-full font-bold pb-2">
-                Conteúdo dos Catálogos
+        <div className={cn('flex w-full lg:w-1/2 h-96 p-1', className)}>
+            <div
+                className="flex flex-col justify-center items-start w-full h-full bg-white border rounded-xl shadow-sm"
+                ref={divRef}
+            >
+                <div className="flex items-center justify-center w-full font-bold pb-2">
+                    Conteúdo
+                </div>
+                <div className="flex flex-wrap w-full justify-end px-4 pb-2 h-8"/>
+                <BarChart width={chartWidth} height={280} data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="catalogName" className="text-xs"/>
+                    <YAxis className="text-xs" allowDecimals={false}/>
+                    <Tooltip labelClassName="text-xs" wrapperClassName="text-xs"/>
+                    <Legend wrapperStyle={{fontSize: '0.75rem'}}/>
+                    <Bar dataKey="products" fill={chartColors[0]} name="Produtos"/>
+                    <Bar dataKey="categories" fill={chartColors[1]} name="Categorias"/>
+                </BarChart>
             </div>
-            <div className="flex flex-wrap w-full justify-end px-4 pb-2 h-8"/>
-            <BarChart width={chartWidth} height={280} data={chartData}>
-                <CartesianGrid strokeDasharray="3 3"/>
-                <XAxis dataKey="catalogName" className="text-xs"/>
-                <YAxis className="text-xs"/>
-                <Tooltip labelClassName="text-xs" wrapperClassName="text-xs"/>
-                <Legend wrapperStyle={{fontSize: '0.75rem'}}/>
-                <Bar dataKey="products" fill={chartColors[0]} name="Produtos"/>
-                <Bar dataKey="categories" fill={chartColors[1]} name="Categorias"/>
-            </BarChart>
         </div>
     )
 }

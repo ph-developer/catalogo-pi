@@ -39,7 +39,7 @@ export const CatalogViewsCardChart = ({catalogIds, catalogs, className = ''}: Pr
     const chartData = useMemo(() => {
         if (!catalogIds) return []
 
-        const empty = catalogIds.reduce(
+        const empty = () => catalogIds.reduce(
             (prev, catalogId) => ({...prev, [catalogId]: 0}),
             {} as ChartDataObj
         )
@@ -48,23 +48,23 @@ export const CatalogViewsCardChart = ({catalogIds, catalogs, className = ''}: Pr
         const period = days === 1 ? 24 : days
         for (let i = 0; i < period; i++) {
             const dateString = days === 1
-                ? moment().subtract(i, 'hours').format('HH') + 'h'
-                : moment().subtract(i, 'days').format('DD/MMM')
-            data[dateString] = {...empty}
+                ? moment().subtract(i, 'hours').format('DD-MM-YYYY-HH') + 'h'
+                : moment().subtract(i, 'days').format('DD-MM-YYYY')
+            data[dateString] = empty()
         }
 
         for (const [catalogId, events] of Object.entries(catalogViewEvents)) {
             for (const {date} of events) {
                 const dateString = days === 1
-                    ? moment(date).format('HH') + 'h'
-                    : moment(date).format('DD/MMM')
+                    ? moment(date).format('DD-MM-YYYY-HH') + 'h'
+                    : moment(date).format('DD-MM-YYYY')
                 if (data[dateString]) data[dateString][catalogId]++
             }
         }
 
         return Object
             .keys(data)
-            .map((date) => ({date, ...data[date]}))
+            .map((date) => ({date: date.substring(date.length-3), ...data[date]}))
             .reverse()
     }, [catalogIds, days, catalogViewEvents])
 
@@ -74,44 +74,43 @@ export const CatalogViewsCardChart = ({catalogIds, catalogs, className = ''}: Pr
     })
 
     return (
-        <div
-            className={cn(
-                "flex flex-col justify-center items-start w-1/2 h-96 bg-white border rounded-xl shadow-sm",
-                className
-            )}
-            ref={divRef}
-        >
-            <div className="flex items-center justify-center w-full font-bold pb-2">
-                Visualizações por Catálogo
+        <div className={cn('flex w-full lg:w-1/2 h-96 p-1', className)}>
+            <div
+                className="flex flex-col justify-center items-start w-full h-full bg-white border rounded-xl shadow-sm"
+                ref={divRef}
+            >
+                <div className="flex items-center justify-center w-full font-bold pb-2">
+                    Visualizações
+                </div>
+                <div className="flex flex-wrap w-full justify-end px-4 pb-2">
+                    {[1, 7, 15, 30].map((periodInDays) => (
+                        <Button
+                            key={`cat_views_period_${periodInDays}`}
+                            className="ml-1 text-xs px-2 h-6"
+                            variant={days === periodInDays ? 'default' : 'ghost'}
+                            onClick={() => setDays(periodInDays)}
+                        >
+                            {periodInDays === 1 ? '24 horas' : `${periodInDays} dias`}
+                        </Button>
+                    ))}
+                </div>
+                <LineChart width={chartWidth} height={280} data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="date" className="text-xs"/>
+                    <YAxis className="text-xs" allowDecimals={false}/>
+                    <Tooltip labelClassName="text-xs" wrapperClassName="text-xs"/>
+                    <Legend wrapperStyle={{fontSize: '0.75rem'}}/>
+                    {catalogIds?.map((catalogId, i) => (
+                        <Line
+                            key={catalogId}
+                            type="monotone"
+                            dataKey={catalogId}
+                            name={catalogs.find((catalog) => catalog.id === catalogId)?.name ?? catalogId}
+                            stroke={chartColors[i % chartColors.length]}
+                        />
+                    ))}
+                </LineChart>
             </div>
-            <div className="flex flex-wrap w-full justify-end px-4 pb-2">
-                {[1,7,15,30].map((periodInDays) => (
-                    <Button
-                        key={`cat_views_period_${periodInDays}`}
-                        className="ml-1 text-xs px-2 h-6"
-                        variant={days === periodInDays ? 'default' : 'ghost'}
-                        onClick={() => setDays(periodInDays)}
-                    >
-                        {periodInDays === 1 ? '24 horas' : `${periodInDays} dias`}
-                    </Button>
-                ))}
-            </div>
-            <LineChart width={chartWidth} height={280} data={chartData}>
-                <CartesianGrid strokeDasharray="3 3"/>
-                <XAxis dataKey="date" className="text-xs"/>
-                <YAxis className="text-xs"/>
-                <Tooltip labelClassName="text-xs" wrapperClassName="text-xs"/>
-                <Legend wrapperStyle={{fontSize: '0.75rem'}}/>
-                {catalogIds?.map((catalogId, i) => (
-                    <Line
-                        key={catalogId}
-                        type="monotone"
-                        dataKey={catalogId}
-                        name={catalogs.find((catalog) => catalog.id === catalogId)?.name ?? catalogId}
-                        stroke={chartColors[i % chartColors.length]}
-                    />
-                ))}
-            </LineChart>
         </div>
     )
 }

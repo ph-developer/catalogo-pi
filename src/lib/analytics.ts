@@ -12,6 +12,17 @@ const getClientIdentifier = () => {
     return clientIdentifier
 }
 
+const getDeviceType = ():'desktop'|'mobile' => {
+    const userAgent = window.navigator.userAgent.toLowerCase()
+    const mobileDevices = ['android', 'webos', 'iphone', 'ipad', 'ipod', 'blackberry', 'windows phone']
+
+    if (mobileDevices.some((device) => userAgent.includes(device))) {
+        return 'mobile'
+    } else {
+        return 'desktop'
+    }
+}
+
 const registerCatalogViewEvent = async (catalogUrl: string) => {
     if (!catalogUrl) return false
 
@@ -24,12 +35,14 @@ const registerCatalogViewEvent = async (catalogUrl: string) => {
     const {id: catalogId} = snapshots.docs[0]
     const now = Date.now()
     const clientIdentifier = getClientIdentifier()
+    const device = getDeviceType()
     const eventRef = ref(rtdb, `analytics/${catalogId}/catalogView/${now}`)
 
     await set(eventRef, {
         date: new Date(now).toString(),
         clientIdentifier,
-        catalogId
+        catalogId,
+        device
     })
 }
 

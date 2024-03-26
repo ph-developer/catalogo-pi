@@ -8,6 +8,7 @@ export const analyticsEventsParser = {
         .map((event) => ({
             clientIdentifier: event.clientIdentifier,
             date: new Date(event.date),
-            catalogId: event.catalogId
+            catalogId: event.catalogId,
+            device: event.device
         }))
 }
