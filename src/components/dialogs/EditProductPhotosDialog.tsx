@@ -71,7 +71,7 @@ export const EditProductPhotosDialog = ({children, product, onSavePhotos}: Props
                         {photoUrls.map((photoUrl) => (
                             <div key={photoUrl} className="mr-2 mb-2">
                                 <ImgPreview
-                                    className="h-44 w-40"
+                                    className="h-44 w-40 object-cover"
                                     imgSrc={photoUrl.startsWith('blob:') ? photoUrl : getImgSrcFn('product', photoUrl)}
                                     closeable={true}
                                     disabled={isLoading}
