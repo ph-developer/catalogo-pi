@@ -2,10 +2,8 @@ import {Link, useParams} from "react-router-dom";
 import {useCatalog} from "@/hooks/use-catalog.ts";
 import {CatalogNotFound} from "@/components/partials/public/catalog/CatalogNotFound.tsx";
 import {useAuth} from "@/hooks/use-auth.ts";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 import {Icons} from "@/components/ui/icons.tsx";
-import {ConfirmDeleteProductDialog} from "@/components/dialogs/ConfirmDeleteProductDialog.tsx";
 import {usePageTitle} from "@/hooks/use-page-title.ts";
 import {useBgColor} from "@/hooks/use-bg-color.ts";
 import {EditProductDialog} from "@/components/dialogs/EditProductDialog.tsx";
@@ -17,11 +15,10 @@ import {useCategories} from "@/hooks/use-categories.ts";
 import {useMemo} from "react";
 import {EditCategoriesDialog} from "@/components/dialogs/EditCategoriesDialog.tsx";
 import {Category} from "@/types/category";
-import {mapProductCategories} from "@/mappers/map-product-categories.ts";
 import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
 import {UrlQrCodeDialog} from "@/components/dialogs/UrlQrCodeDialog.tsx";
-import {EditProductPhotosDialog} from "@/components/dialogs/EditProductPhotosDialog.tsx";
 import {useStorage} from "@/hooks/use-storage.ts";
+import {ProductsTable} from "@/components/partials/dashboard/catalog/ProductsTable.tsx";
 
 const CatalogPage = () => {
     const {catalogId} = useParams()
@@ -188,104 +185,19 @@ const CatalogPage = () => {
                         </EditProductDialog>
                     </div>
                 </div>
-                <div className="bg-white border rounded-xl shadow-sm">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Produto</TableHead>
-                                <TableHead className="text-center">Ações</TableHead>
-                            </TableRow>
-                        </TableHeader>
-
-                        <TableBody>
-                            {products.map((product) => (
-                                <TableRow key={product.id}>
-                                    <TableCell className="text-justify">
-                                        <div className="font-semibold">
-                                            {product.name}
-                                        </div>
-                                        <div>
-                                            <span className="font-semibold">Descrição: </span>{product.description}
-                                        </div>
-                                        {!!product.categoryIds.length && (
-                                            <div>
-                                                <span className="font-semibold">Categorias: </span>
-                                                {mapProductCategories(product, categories)
-                                                    .sortBy('name')
-                                                    .map((category) => category.name)
-                                                    .join(', ')}
-                                            </div>
-                                        )}
-                                    </TableCell>
-                                    <TableCell className="whitespace-nowrap">
-                                        <div className="flex items-center justify-center space-x-1.5 align-middle">
-                                            <TooltipProvider>
-                                                <Tooltip>
-                                                    <TooltipTrigger>
-                                                        <EditProductPhotosDialog
-                                                            product={product}
-                                                            onSavePhotos={onSavePhotos}
-                                                        >
-                                                            <div>
-                                                                <Icons.image
-                                                                    className="w-3.5 h-3.5 cursor-pointer"
-                                                                />
-                                                            </div>
-                                                        </EditProductPhotosDialog>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>
-                                                        <p>Fotos</p>
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </TooltipProvider>
-
-                                            <TooltipProvider>
-                                                <Tooltip>
-                                                    <TooltipTrigger>
-                                                        <EditProductDialog
-                                                            product={product}
-                                                            onSaveProduct={onSaveProduct}
-                                                            categories={categories}
-                                                        >
-                                                            <div>
-                                                                <Icons.edit
-                                                                    className="w-3.5 h-3.5 cursor-pointer stroke-success"
-                                                                />
-                                                            </div>
-                                                        </EditProductDialog>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>
-                                                        <p>Editar</p>
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </TooltipProvider>
-
-                                            <TooltipProvider>
-                                                <Tooltip>
-                                                    <TooltipTrigger>
-                                                        <ConfirmDeleteProductDialog
-                                                            product={product}
-                                                            onDeleteProduct={onDeleteProduct}
-                                                        >
-                                                            <div>
-                                                                <Icons.trash
-                                                                    className="w-3.5 h-3.5 cursor-pointer stroke-destructive"
-                                                                />
-                                                            </div>
-                                                        </ConfirmDeleteProductDialog>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>
-                                                        <p>Excluir</p>
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </TooltipProvider>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>
+                {!!products.length ? (
+                    <div className="bg-white border rounded-xl shadow-sm">
+                        <ProductsTable
+                            products={products}
+                            categories={categories}
+                            onSaveProduct={onSaveProduct}
+                            onDeleteProduct={onDeleteProduct}
+                            onSavePhotos={onSavePhotos}
+                        />
+                    </div>
+                ) : (
+                    <div className="text-sm">Não há nenhum produto cadastrado...</div>
+                )}
             </div>
         </section>
     )
