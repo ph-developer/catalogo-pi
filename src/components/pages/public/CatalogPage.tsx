@@ -91,7 +91,7 @@ const CatalogPage = () => {
                         />
                     )}
                 </div>
-                <div className="flex flex-col w-full">
+                <div className="flex flex-col w-full pb-6">
                     {filteredProducts.map((product) => (
                         <CatalogItem
                             key={product.id}
