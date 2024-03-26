@@ -46,7 +46,7 @@ export const ProductsTable = ({products, categories, onSaveProduct, onDeleteProd
                                 </div>
                             )}
                         </TableCell>
-                        <TableCell className="whitespace-nowrap">
+                        <TableCell className="whitespace-nowrap w-20">
                             <div className="flex items-center justify-center space-x-1.5 align-middle">
                                 <TooltipProvider>
                                     <Tooltip>
