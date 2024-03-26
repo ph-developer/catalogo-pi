@@ -57,8 +57,8 @@ export const CatalogUserDevicesCardChart = ({catalogIds, catalogs, className = '
         const period = days === 1 ? 24 : days
         for (let i = 0; i < period; i++) {
             const dateString = days === 1
-                ? moment().subtract(i, 'hours').format('DD-MM-YYYY-HH')
-                : moment().subtract(i, 'days').format('DD-MM-YYYY')
+                ? moment().subtract(i, 'hours').format('DD/MMM/YYYY HH') + 'h'
+                : moment().subtract(i, 'days').format('DD/MMM/YYYY')
             if (!allowedDates.includes(dateString)) allowedDates.push(dateString)
         }
 
@@ -67,8 +67,8 @@ export const CatalogUserDevicesCardChart = ({catalogIds, catalogs, className = '
 
             for (const {date, clientIdentifier, device} of events) {
                 const dateString = days === 1
-                    ? moment(date).format('DD-MM-YYYY-HH')
-                    : moment(date).format('DD-MM-YYYY')
+                    ? moment(date).format('DD/MMM/YYYY HH') + 'h'
+                    : moment(date).format('DD/MMM/YYYY')
                 if (allowedDates.includes(dateString) && !Object.keys(devices).includes(clientIdentifier)) {
                     devices[clientIdentifier] = device
                 }

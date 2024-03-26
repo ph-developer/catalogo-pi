@@ -48,16 +48,16 @@ export const CatalogActiveUsersCardChart = ({catalogIds, catalogs, className = '
         const period = days === 1 ? 24 : days
         for (let i = 0; i < period; i++) {
             const dateString = days === 1
-                ? moment().subtract(i, 'hours').format('DD-MM-YYYY-HH') + 'h'
-                : moment().subtract(i, 'days').format('DD-MM-YYYY')
+                ? moment().subtract(i, 'hours').format('DD/MMM/YYYY HH') + 'h'
+                : moment().subtract(i, 'days').format('DD/MMM/YYYY')
             data[dateString] = empty()
         }
 
         for (const [catalogId, events] of Object.entries(catalogViewEvents)) {
             for (const {date, clientIdentifier} of events) {
                 const dateString = days === 1
-                    ? moment(date).format('DD-MM-YYYY-HH') + 'h'
-                    : moment(date).format('DD-MM-YYYY')
+                    ? moment(date).format('DD/MMM/YYYY HH') + 'h'
+                    : moment(date).format('DD/MMM/YYYY')
                 if (data[dateString] && !data[dateString][catalogId].includes(clientIdentifier)) {
                     data[dateString][catalogId].push(clientIdentifier)
                 }
@@ -66,13 +66,16 @@ export const CatalogActiveUsersCardChart = ({catalogIds, catalogs, className = '
 
         return Object
             .keys(data)
+            .reverse()
             .map((date) => {
                 const entries = Object
                     .entries(data[date])
                     .map(([key, value]) => [key, value.length])
-                return {date: date.substring(date.length-3), ...Object.fromEntries(entries)};
+                return {
+                    date: days === 1 ? date.substring(date.length-3) : date.substring(0, 6),
+                    ...Object.fromEntries(entries)
+                };
             })
-            .reverse()
     }, [catalogIds, days, catalogViewEvents])
 
     useResizeScreen(() => {
