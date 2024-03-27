@@ -46,6 +46,31 @@ const registerCatalogViewEvent = async (catalogUrl: string) => {
     })
 }
 
+const registerProductViewEvent = async (catalogUrl: string, productId: string) => {
+    if (!catalogUrl || !productId) return false
+
+    const catalogsRef = collection(db, 'catalogs')
+    const catalogQuery = query(catalogsRef, where('url', '==', catalogUrl), limit(1))
+    const snapshots = await getDocs(catalogQuery)
+
+    if (snapshots.empty) return false
+
+    const {id: catalogId} = snapshots.docs[0]
+    const now = Date.now()
+    const clientIdentifier = getClientIdentifier()
+    const device = getDeviceType()
+    const eventRef = ref(rtdb, `analytics/${catalogId}/productView/${now}`)
+
+    await set(eventRef, {
+        date: new Date(now).toString(),
+        clientIdentifier,
+        catalogId,
+        productId,
+        device
+    })
+}
+
 export const analytics = {
-    registerCatalogViewEvent
+    registerCatalogViewEvent,
+    registerProductViewEvent
 }

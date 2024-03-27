@@ -9,6 +9,7 @@ import {Catalog} from "@/types/catalog";
 import {useStorage} from "@/hooks/use-storage.ts";
 import {mapProductCategories} from "@/mappers/map-product-categories.ts";
 import {Category} from "@/types/category";
+import {Link} from "react-router-dom";
 
 interface Props {
     catalog: Catalog
@@ -61,7 +62,11 @@ export const CatalogItem = ({ catalog, categories, product }: Props) => {
                     </Carousel>
                 </div>
                 <div className="flex flex-col flex-auto space-y-6">
-                    <CardTitle>{product.name}</CardTitle>
+                    <CardTitle>
+                        <Link className="hover:underline" to={`/${catalog.url}/${product.id}`}>
+                            {product.name}
+                        </Link>
+                    </CardTitle>
                     <p className="text-sm min-h-20 line-clamp-4 text-justify whitespace-break-spaces">
                         {product.description}
                     </p>

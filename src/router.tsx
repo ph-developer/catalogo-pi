@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import {catalogAnalyticsLoader} from "@/loaders/catalog-analytics-loader.ts";
+import {productAnalyticsLoader} from "@/loaders/product-analytics-loader.ts";
 
 export const router = createBrowserRouter([
     {
@@ -19,6 +20,13 @@ export const router = createBrowserRouter([
                 loader: catalogAnalyticsLoader,
                 lazy: async () => ({
                     Component: (await import('@/components/pages/public/CatalogPage.tsx')).default
+                })
+            },
+            {
+                path: ':catalogUrl/:productId',
+                loader: productAnalyticsLoader,
+                lazy: async () => ({
+                    Component: (await import('@/components/pages/public/ProductPage.tsx')).default
                 })
             }
         ]
