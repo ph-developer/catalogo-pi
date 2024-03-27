@@ -6,6 +6,7 @@ import {CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from "rec
 import {Button} from "@/components/ui/button.tsx";
 import {cn} from "@/lib/utils.ts";
 import {useResizeScreen} from "@/hooks/use-resize-screen.ts";
+import {CatalogViewEvent} from "@/types/analytics";
 
 interface Props {
     catalogIds?: string[]
@@ -14,11 +15,8 @@ interface Props {
 }
 
 interface ChartData {
-    [date: string]: ChartDataObj
-}
-
-interface ChartDataObj {
-    [catalogId: string]: number
+    [catalogId: string]: number | string
+    label: string
 }
 
 const chartColors = [
@@ -31,7 +29,7 @@ const chartColors = [
 ]
 
 export const CatalogViewsCardChart = ({catalogIds, catalogs, className = ''}: Props) => {
-    const {catalogViewEvents} = useAnalytics(catalogIds)
+    const {catalogViewEvents, filterEventsByPeriod} = useAnalytics(catalogIds)
     const divRef = useRef<HTMLDivElement | null>(null)
     const [days, setDays] = useState<number>(7)
     const [chartWidth, setChartWidth] = useState<number>(0)
@@ -39,36 +37,22 @@ export const CatalogViewsCardChart = ({catalogIds, catalogs, className = ''}: Pr
     const chartData = useMemo(() => {
         if (!catalogIds) return []
 
-        const empty = () => catalogIds.reduce(
-            (prev, catalogId) => ({...prev, [catalogId]: 0}),
-            {} as ChartDataObj
-        )
-
-        const data: ChartData = {}
         const period = days === 1 ? 24 : days
+        const labelFormat = days === 1 ? 'HH[h]' : 'DD/MMM'
+        const subtractType = days === 1 ? 'hours' : 'days'
+        const data: { [label: string]: ChartData } = {}
+
+        const events: CatalogViewEvent[] = filterEventsByPeriod(catalogViewEvents, days)
         for (let i = 0; i < period; i++) {
-            const dateString = days === 1
-                ? moment().subtract(i, 'hours').format('DD/MMM/YYYY HH') + 'h'
-                : moment().subtract(i, 'days').format('DD/MMM/YYYY')
-            data[dateString] = empty()
+            const label = moment().subtract(i, subtractType).format(labelFormat)
+            data[label] = {label, ...Object.fromEntries(catalogIds.map(catalogId => [catalogId, 0]))}
         }
+        events.forEach((event) => {
+            const label = moment(event.date).format(labelFormat)
+            if (typeof data[label][event.catalogId] === 'number') (data[label][event.catalogId] as number)++
+        })
 
-        for (const [catalogId, events] of Object.entries(catalogViewEvents)) {
-            for (const {date} of events) {
-                const dateString = days === 1
-                    ? moment(date).format('DD/MMM/YYYY HH') + 'h'
-                    : moment(date).format('DD/MMM/YYYY')
-                if (data[dateString]) data[dateString][catalogId]++
-            }
-        }
-
-        return Object
-            .keys(data)
-            .reverse()
-            .map((date) => ({
-                date: days === 1 ? date.substring(date.length-3) : date.substring(0, 6),
-                ...data[date]
-            }))
+        return Object.values(data).reverse()
     }, [catalogIds, days, catalogViewEvents])
 
     useResizeScreen(() => {
@@ -99,7 +83,7 @@ export const CatalogViewsCardChart = ({catalogIds, catalogs, className = ''}: Pr
                 </div>
                 <LineChart width={chartWidth} height={280} data={chartData}>
                     <CartesianGrid strokeDasharray="3 3"/>
-                    <XAxis dataKey="date" className="text-xs"/>
+                    <XAxis dataKey="label" className="text-xs"/>
                     <YAxis className="text-xs" allowDecimals={false}/>
                     <Tooltip labelClassName="text-xs" wrapperClassName="text-xs"/>
                     <Legend wrapperStyle={{fontSize: '0.75rem'}}/>

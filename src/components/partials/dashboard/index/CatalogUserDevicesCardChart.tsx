@@ -1,11 +1,11 @@
 import {Catalog} from "@/types/catalog";
 import {useMemo, useRef, useState} from "react";
-import moment from "moment/moment";
 import {useAnalytics} from "@/hooks/use-analytics.ts";
 import {Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis} from "recharts";
 import {Button} from "@/components/ui/button.tsx";
 import {cn} from "@/lib/utils.ts";
 import {useResizeScreen} from "@/hooks/use-resize-screen.ts";
+import {CatalogViewEvent} from "@/types/analytics";
 
 interface Props {
     catalogIds?: string[]
@@ -14,17 +14,9 @@ interface Props {
 }
 
 interface ChartData {
-    [catalogId: string]: ChartDataObj
-}
-
-interface ChartDataObj {
     catalogName: string
     desktop: number
     mobile: number
-}
-
-interface ChartDataDevices {
-    [clientIdentifier: string]: 'desktop'|'mobile'
 }
 
 const chartColors = [
@@ -37,53 +29,31 @@ const chartColors = [
 ]
 
 export const CatalogUserDevicesCardChart = ({catalogIds, catalogs, className = ''}: Props) => {
-    const {catalogViewEvents} = useAnalytics(catalogIds)
+    const {catalogViewEvents, filterEventsByPeriod, filterEventsByKeys} = useAnalytics(catalogIds)
     const divRef = useRef<HTMLDivElement | null>(null)
     const [days, setDays] = useState<number>(7)
     const [chartWidth, setChartWidth] = useState<number>(0)
 
-    const chartData = useMemo(() => {
+    const chartData = useMemo<ChartData[]>(() => {
         if (!catalogIds) return []
 
-        const data: ChartData = catalogs.reduce(
-            (prev, catalog) => {
-                if (!catalog.id) return prev
-                return ({...prev, [catalog.id]: {catalogName: catalog.name, desktop: 0, mobile: 0}});
-            },
-            {} as ChartData
-        )
+        const data: { [catalogId: string]: ChartData } = {}
 
-        const allowedDates: string[] = []
-        const period = days === 1 ? 24 : days
-        for (let i = 0; i < period; i++) {
-            const dateString = days === 1
-                ? moment().subtract(i, 'hours').format('DD/MMM/YYYY HH') + 'h'
-                : moment().subtract(i, 'days').format('DD/MMM/YYYY')
-            if (!allowedDates.includes(dateString)) allowedDates.push(dateString)
-        }
-
-        for (const [catalogId, events] of Object.entries(catalogViewEvents)) {
-            const devices: ChartDataDevices = {}
-
-            for (const {date, clientIdentifier, device} of events) {
-                const dateString = days === 1
-                    ? moment(date).format('DD/MMM/YYYY HH') + 'h'
-                    : moment(date).format('DD/MMM/YYYY')
-                if (allowedDates.includes(dateString) && !Object.keys(devices).includes(clientIdentifier)) {
-                    devices[clientIdentifier] = device
-                }
+        let events: CatalogViewEvent[] = filterEventsByPeriod(catalogViewEvents, days)
+        events = filterEventsByKeys(events, (event) => [
+            event.catalogId, event.clientIdentifier, event.device
+        ])
+        catalogs.forEach((catalog) => {
+            if (catalog.id) data[catalog.id] = {catalogName: catalog.name, desktop: 0, mobile: 0}
+        })
+        events.forEach((event) => {
+            const catalogId = event.catalogId
+            if (data[catalogId] && ['desktop', 'mobile'].includes(event.device)) {
+                data[catalogId][event.device]++
             }
+        })
 
-            Object.values(devices).forEach((device) => {
-                if (data[catalogId] && ['desktop', 'mobile'].includes(device)) {
-                    data[catalogId][device]++
-                }
-            })
-        }
-
-        return Object
-            .keys(data)
-            .map((catalogId) => ({...data[catalogId]}))
+        return Object.values(data)
     }, [catalogIds, days, catalogViewEvents])
 
     useResizeScreen(() => {

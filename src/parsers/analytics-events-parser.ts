@@ -1,14 +1,22 @@
 import {DataSnapshot} from "firebase/database";
-import {AnalyticsEvent, RTDBAnalyticsEvent} from "@/types/analytics";
+import {CatalogViewEvent, ProductViewEvent} from "@/types/analytics";
 
 export const analyticsEventsParser = {
-    fromRTDB: (
+    catalogViewFromRTDB: (
         data: DataSnapshot
-    ): AnalyticsEvent[] => Object.values<RTDBAnalyticsEvent>(data.val())
-        .map((event) => ({
-            clientIdentifier: event.clientIdentifier,
-            date: new Date(event.date),
-            catalogId: event.catalogId,
-            device: event.device
-        }))
+    ): CatalogViewEvent[] => Object.values<CatalogViewEvent>(data.val()).map((event) => ({
+        clientIdentifier: event.clientIdentifier,
+        date: event.date,
+        catalogId: event.catalogId,
+        device: event.device
+    })),
+    productViewFromRTDB: (
+        data: DataSnapshot
+    ): ProductViewEvent[] => Object.values<ProductViewEvent>(data.val()).map((event) => ({
+        clientIdentifier: event.clientIdentifier,
+        date: event.date,
+        catalogId: event.catalogId,
+        productId: event.productId,
+        device: event.device
+    }))
 }

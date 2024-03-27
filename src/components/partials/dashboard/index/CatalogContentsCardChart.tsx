@@ -10,10 +10,6 @@ interface Props {
 }
 
 interface ChartData {
-    [catalogId: string]: ChartDataObj
-}
-
-interface ChartDataObj {
     catalogName: string
     products: number
     categories: number
@@ -28,25 +24,12 @@ export const CatalogContentsCardChart = ({catalogs, className = ''}: Props) => {
     const divRef = useRef<HTMLDivElement | null>(null)
     const [chartWidth, setChartWidth] = useState<number>(0)
 
-    const chartData = useMemo(() => {
-        const data = catalogs.reduce(
-            (prev, catalog) => {
-                if (!catalog.id) return prev
-                return {
-                    ...prev,
-                    [catalog.id]: {
-                        catalogName: catalog.name,
-                        products: catalog.productIds.length,
-                        categories: catalog.categoryIds.length
-                    }
-                }
-            },
-            {} as ChartData
-        )
-
-        return Object
-            .keys(data)
-            .map((catalogId) => ({...data[catalogId]}))
+    const chartData = useMemo<ChartData[]>(() => {
+        return catalogs.map((catalog) => ({
+            catalogName: catalog.name,
+            products: catalog.productIds.length,
+            categories: catalog.categoryIds.length
+        }))
     }, [catalogs])
 
     useResizeScreen(() => {
