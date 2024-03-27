@@ -66,7 +66,7 @@ export const useAnalytics = (catalogIds: string[] | null = null) => {
 
         return Object.values(events)
             .flatMap((events) => events)
-            .filter((event) => moment(event.date).isAfter(limitDate))
+            .filter((event) => moment(new Date(event.date)).isAfter(limitDate))
     }
 
     const filterEventsByKeys = (events: AnalyticsEvent[], keysFn: (event: AnalyticsEvent) => string|string[]) => {

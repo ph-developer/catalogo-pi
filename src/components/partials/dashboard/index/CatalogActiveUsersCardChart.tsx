@@ -45,14 +45,14 @@ export const CatalogActiveUsersCardChart = ({catalogIds, catalogs, className = '
 
         let events: CatalogViewEvent[] = filterEventsByPeriod(catalogViewEvents, days)
         events = filterEventsByKeys(events, (event) => [
-            moment(event.date).format(keyFormat), event.catalogId, event.clientIdentifier
+            moment(new Date(event.date)).format(keyFormat), event.catalogId, event.clientIdentifier
         ])
         for (let i = 0; i < period; i++) {
             const label = moment().subtract(i, subtractType).format(labelFormat)
             data[label] = {label, ...Object.fromEntries(catalogIds.map(catalogId => [catalogId, 0]))}
         }
         events.forEach((event) => {
-            const label = moment(event.date).format(labelFormat)
+            const label = moment(new Date(event.date)).format(labelFormat)
             if (typeof data[label][event.catalogId] === 'number') (data[label][event.catalogId] as number)++
         })
 

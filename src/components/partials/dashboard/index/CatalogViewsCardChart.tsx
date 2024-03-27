@@ -48,7 +48,7 @@ export const CatalogViewsCardChart = ({catalogIds, catalogs, className = ''}: Pr
             data[label] = {label, ...Object.fromEntries(catalogIds.map(catalogId => [catalogId, 0]))}
         }
         events.forEach((event) => {
-            const label = moment(event.date).format(labelFormat)
+            const label = moment(new Date(event.date)).format(labelFormat)
             if (typeof data[label][event.catalogId] === 'number') (data[label][event.catalogId] as number)++
         })
 
