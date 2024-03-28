@@ -28,7 +28,7 @@ const chartColors = [
     '#e879f9'
 ]
 
-export const CatalogActiveUsersCardChart = ({catalogIds, catalogs, className = ''}: Props) => {
+export const CatalogVisitorsCardChart = ({catalogIds, catalogs, className = ''}: Props) => {
     const {catalogViewEvents, filterEventsByPeriod, filterEventsByKeys} = useAnalytics(catalogIds)
     const divRef = useRef<HTMLDivElement | null>(null)
     const [days, setDays] = useState<number>(7)
@@ -71,7 +71,7 @@ export const CatalogActiveUsersCardChart = ({catalogIds, catalogs, className = '
                 ref={divRef}
             >
                 <div className="flex items-center justify-center w-full font-bold pb-2">
-                    Usuários Ativos
+                    Visitantes
                 </div>
                 <div className="flex flex-wrap w-full justify-end px-4 pb-2">
                     {[1, 7, 15, 30].map((periodInDays) => (

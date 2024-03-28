@@ -6,7 +6,7 @@ import {useCatalogs} from "@/hooks/use-catalogs.ts";
 import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
 import {CatalogViewsCardChart} from "@/components/partials/dashboard/index/CatalogViewsCardChart.tsx";
 import {CatalogContentsCardChart} from "@/components/partials/dashboard/index/CatalogContentsCardChart.tsx";
-import {CatalogActiveUsersCardChart} from "@/components/partials/dashboard/index/CatalogActiveUsersCardChart.tsx";
+import {CatalogVisitorsCardChart} from "@/components/partials/dashboard/index/CatalogVisitorsCardChart.tsx";
 import {CatalogUserDevicesCardChart} from "@/components/partials/dashboard/index/CatalogUserDevicesCardChart.tsx";
 
 const DashboardPage = () => {
@@ -32,7 +32,7 @@ const DashboardPage = () => {
                     />
                 )}
                 {!!catalogs.length && !!currentUser.catalogIds && (
-                    <CatalogActiveUsersCardChart
+                    <CatalogVisitorsCardChart
                         catalogIds={currentUser?.catalogIds}
                         catalogs={catalogs}
                     />
