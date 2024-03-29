@@ -9,12 +9,17 @@ import {Catalog} from "@/types/catalog";
 import {
     ProductViewsCardChart
 } from "@/components/partials/dashboard/dashboard/charts/specific/ProductViewsCardChart.tsx";
+import {useAnalytics} from "@/hooks/use-analytics.ts";
+import {useProducts} from "@/hooks/use-products.ts";
 
 interface Props {
     catalog: Catalog
 }
 
 export const SpecificCharts = ({catalog}: Props) => {
+    const {catalogViewEvents, productViewEvents} = useAnalytics(catalog.id)
+    const {products} = useProducts(catalog.productIds)
+
     return (
         <>
             {!!catalog.id && (
@@ -23,10 +28,10 @@ export const SpecificCharts = ({catalog}: Props) => {
                     <CatalogTextDisplay label="Categorias" value={catalog.categoryIds.length}/>
                     <div className="w-0 lg:w-1/2 h-[6.5rem]" />
                     {!!catalog.productIds.length && (
-                        <ProductViewsCardChart catalogId={catalog.id} productIds={catalog.productIds} />
+                        <ProductViewsCardChart productViewEvents={productViewEvents} products={products} />
                     )}
-                    <CatalogViewsAndVisitorsCardChart catalogId={catalog.id}/>
-                    <CatalogUserDevicesCardChart catalogId={catalog.id}/>
+                    <CatalogViewsAndVisitorsCardChart catalogViewEvents={catalogViewEvents}/>
+                    <CatalogUserDevicesCardChart catalogViewEvents={catalogViewEvents}/>
                 </>
             )}
         </>

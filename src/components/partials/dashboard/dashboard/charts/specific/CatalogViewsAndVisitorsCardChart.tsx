@@ -1,15 +1,14 @@
-import {useMemo, useRef, useState} from "react";
+import {useMemo, useState} from "react";
 import moment from "moment/moment";
-import {useAnalytics} from "@/hooks/use-analytics.ts";
-import {CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
+import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 import {Button} from "@/components/ui/button.tsx";
 import {cn} from "@/lib/utils.ts";
-import {useResizeScreen} from "@/hooks/use-resize-screen.ts";
 import {CatalogViewEvent} from "@/types/analytics";
 import {chartColors} from "@/components/partials/dashboard/dashboard/charts/chart-colors.ts";
+import {filterEventsByKeys, filterEventsByPeriod} from "@/helpers/analytics-filters.ts";
 
 interface Props {
-    catalogId: string
+    catalogViewEvents: CatalogViewEvent[]
     className?: string
 }
 
@@ -19,22 +18,17 @@ interface ChartData {
     visitors: number
 }
 
-export const CatalogViewsAndVisitorsCardChart = ({catalogId, className = ''}: Props) => {
-    const {catalogViewEvents, filterEventsByPeriod, filterEventsByKeys} = useAnalytics(catalogId)
-    const divRef = useRef<HTMLDivElement | null>(null)
+export const CatalogViewsAndVisitorsCardChart = ({catalogViewEvents, className = ''}: Props) => {
     const [days, setDays] = useState<number>(7)
-    const [chartWidth, setChartWidth] = useState<number>(0)
 
     const chartData = useMemo(() => {
-        if (!catalogId) return []
-
         const keyFormat = days === 1 ? 'DD/MM/YYYY HH' : 'DD/MM/YYYY'
         const period = days === 1 ? 24 : days
         const labelFormat = days === 1 ? 'HH[h]' : 'DD/MMM'
         const subtractType = days === 1 ? 'hours' : 'days'
         const data: { [label: string]: ChartData } = {}
 
-        const events: CatalogViewEvent[] = filterEventsByPeriod(catalogViewEvents, days)
+        const events = filterEventsByPeriod(catalogViewEvents, days)
         const viewEvents = events
         const visitorEvents = filterEventsByKeys(events, (event) => [
             moment(new Date(event.date)).format(keyFormat), event.clientIdentifier
@@ -54,18 +48,12 @@ export const CatalogViewsAndVisitorsCardChart = ({catalogId, className = ''}: Pr
         })
 
         return Object.values(data).reverse()
-    }, [catalogId, days, catalogViewEvents])
-
-    useResizeScreen(() => {
-        const divWidth = divRef.current?.clientWidth
-        if (divWidth) setChartWidth(divWidth - 16)
-    })
+    }, [days, catalogViewEvents])
 
     return (
         <div className={cn('flex w-full lg:w-1/2 h-96 p-1', className)}>
             <div
                 className="flex flex-col justify-center items-start w-full h-full bg-white border rounded-xl shadow-sm"
-                ref={divRef}
             >
                 <div className="flex items-center justify-center w-full font-bold pb-2">
                     Visualizações e Visitantes
@@ -82,15 +70,17 @@ export const CatalogViewsAndVisitorsCardChart = ({catalogId, className = ''}: Pr
                         </Button>
                     ))}
                 </div>
-                <LineChart width={chartWidth} height={280} data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3"/>
-                    <XAxis dataKey="label" className="text-xs"/>
-                    <YAxis className="text-xs" allowDecimals={false}/>
-                    <Tooltip labelClassName="text-xs" wrapperClassName="text-xs"/>
-                    <Legend wrapperStyle={{fontSize: '0.75rem'}}/>
-                    <Line type="monotone" dataKey="views" name="Visualizações" stroke={chartColors[0]}/>
-                    <Line type="monotone" dataKey="visitors" name="Visitantes" stroke={chartColors[1]}/>
-                </LineChart>
+                <ResponsiveContainer className="pr-4" height={280}>
+                    <LineChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <XAxis dataKey="label" className="text-xs"/>
+                        <YAxis className="text-xs" allowDecimals={false}/>
+                        <Tooltip labelClassName="text-xs" wrapperClassName="text-xs"/>
+                        <Legend wrapperStyle={{fontSize: '0.75rem'}}/>
+                        <Line type="monotone" dataKey="views" name="Visualizações" stroke={chartColors[0]}/>
+                        <Line type="monotone" dataKey="visitors" name="Visitantes" stroke={chartColors[1]}/>
+                    </LineChart>
+                </ResponsiveContainer>
             </div>
         </div>
     )

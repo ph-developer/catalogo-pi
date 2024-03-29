@@ -5,6 +5,7 @@ import {
     CatalogUserDevicesCardChart
 } from "@/components/partials/dashboard/dashboard/charts/general/CatalogUserDevicesCardChart.tsx";
 import {Catalog} from "@/types/catalog";
+import {useAnalytics} from "@/hooks/use-analytics.ts";
 
 interface Props {
     catalogIds: string[]
@@ -12,14 +13,16 @@ interface Props {
 }
 
 export const GeneralCharts = ({catalogIds, catalogs}: Props) => {
+    const {catalogViewEvents} = useAnalytics(catalogIds)
+
     return (
         <>
             {!!catalogs.length && (
                 <>
-                    <CatalogViewsCardChart catalogIds={catalogIds} catalogs={catalogs}/>
-                    <CatalogVisitorsCardChart catalogIds={catalogIds} catalogs={catalogs}/>
+                    <CatalogViewsCardChart catalogViewEvents={catalogViewEvents} catalogs={catalogs}/>
+                    <CatalogVisitorsCardChart catalogViewEvents={catalogViewEvents} catalogs={catalogs}/>
                     <CatalogContentsCardChart catalogs={catalogs}/>
-                    <CatalogUserDevicesCardChart catalogIds={catalogIds} catalogs={catalogs}/>
+                    <CatalogUserDevicesCardChart catalogViewEvents={catalogViewEvents} catalogs={catalogs}/>
                 </>
             )}
         </>

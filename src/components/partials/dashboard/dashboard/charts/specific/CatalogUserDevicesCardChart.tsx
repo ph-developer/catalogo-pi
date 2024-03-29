@@ -1,14 +1,13 @@
-import {useMemo, useRef, useState} from "react";
-import {useAnalytics} from "@/hooks/use-analytics.ts";
-import {Cell, Legend, Pie, PieChart, Tooltip} from "recharts";
+import {useMemo, useState} from "react";
+import {Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip} from "recharts";
 import {Button} from "@/components/ui/button.tsx";
 import {cn} from "@/lib/utils.ts";
-import {useResizeScreen} from "@/hooks/use-resize-screen.ts";
 import {CatalogViewEvent} from "@/types/analytics";
 import {chartColors} from "@/components/partials/dashboard/dashboard/charts/chart-colors.ts";
+import {filterEventsByKeys, filterEventsByPeriod} from "@/helpers/analytics-filters.ts";
 
 interface Props {
-    catalogId: string
+    catalogViewEvents: CatalogViewEvent[]
     className?: string
 }
 
@@ -17,21 +16,16 @@ interface ChartData {
     value: number
 }
 
-export const CatalogUserDevicesCardChart = ({catalogId, className = ''}: Props) => {
-    const {catalogViewEvents, filterEventsByPeriod, filterEventsByKeys} = useAnalytics(catalogId)
-    const divRef = useRef<HTMLDivElement | null>(null)
+export const CatalogUserDevicesCardChart = ({catalogViewEvents, className = ''}: Props) => {
     const [days, setDays] = useState<number>(7)
-    const [chartWidth, setChartWidth] = useState<number>(0)
 
     const chartData = useMemo<ChartData[]>(() => {
-        if (!catalogId) return []
-
         const data: { [device: string]: ChartData } = {
             'desktop': {label: 'Desktop', value: 0},
             'mobile': {label: 'Mobile', value: 0}
         }
 
-        let events: CatalogViewEvent[] = filterEventsByPeriod(catalogViewEvents, days)
+        let events = filterEventsByPeriod(catalogViewEvents, days)
         events = filterEventsByKeys(events, (event) => [
             event.clientIdentifier, event.device
         ])
@@ -42,18 +36,12 @@ export const CatalogUserDevicesCardChart = ({catalogId, className = ''}: Props) 
         })
 
         return Object.values(data)
-    }, [catalogId, days, catalogViewEvents])
-
-    useResizeScreen(() => {
-        const divWidth = divRef.current?.clientWidth
-        if (divWidth) setChartWidth(divWidth - 16)
-    })
+    }, [days, catalogViewEvents])
 
     return (
         <div className={cn('flex w-full lg:w-1/2 h-96 p-1', className)}>
             <div
                 className="flex flex-col justify-center items-start w-full h-full bg-white border rounded-xl shadow-sm"
-                ref={divRef}
             >
                 <div className="flex items-center justify-center w-full font-bold pb-2">
                     Dispositivos Utilizados
@@ -70,15 +58,17 @@ export const CatalogUserDevicesCardChart = ({catalogId, className = ''}: Props) 
                         </Button>
                     ))}
                 </div>
-                <PieChart width={chartWidth} height={280}>
-                    <Tooltip labelClassName="text-xs" wrapperClassName="text-xs"/>
-                    <Legend wrapperStyle={{fontSize: '0.75rem'}}/>
-                    <Pie data={chartData} nameKey="label" dataKey="value" label cx="50%" cy="50%">
-                        {chartData.map((_, i) => (
-                            <Cell key={`chart_devices_${i}`} fill={chartColors[i]}/>
-                        ))}
-                    </Pie>
-                </PieChart>
+                <ResponsiveContainer className="pr-4" height={280}>
+                    <PieChart>
+                        <Tooltip labelClassName="text-xs" wrapperClassName="text-xs"/>
+                        <Legend wrapperStyle={{fontSize: '0.75rem'}}/>
+                        <Pie data={chartData} nameKey="label" dataKey="value" label cx="50%" cy="50%">
+                            {chartData.map((_, i) => (
+                                <Cell key={`chart_devices_${i}`} fill={chartColors[i]}/>
+                            ))}
+                        </Pie>
+                    </PieChart>
+                </ResponsiveContainer>
             </div>
         </div>
     )
