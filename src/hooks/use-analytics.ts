@@ -17,7 +17,7 @@ interface AnalyticsEvents {
     [catalogId: string]: AnalyticsEvent[]
 }
 
-export const useAnalytics = (catalogIds: string[] | null = null) => {
+export const useAnalytics = (catalogIds: string[] | string | null = null) => {
     const [catalogViewEvents, setCatalogViewEvents] = useState<CatalogViewEvents>({})
     const [productViewEvents, setProductViewEvents] = useState<ProductViewEvents>({})
 
@@ -39,13 +39,16 @@ export const useAnalytics = (catalogIds: string[] | null = null) => {
     }
 
     useEffect(() => {
-        if (!catalogIds) {
+        const ids = (Array.isArray(catalogIds))
+            ? catalogIds
+            : (!catalogIds ? null : [catalogIds])
+        if (!ids) {
             return
-        } else if (!catalogIds.length) {
+        } else if (!ids.length) {
             if (Object.keys(catalogViewEvents).length) setCatalogViewEvents({})
             if (Object.keys(productViewEvents).length) setProductViewEvents({})
         } else {
-            const unsubscribes = catalogIds.map((catalogId) => {
+            const unsubscribes = ids.map((catalogId) => {
                 const analyticsRef = ref(rtdb, `analytics/${catalogId}`)
                 return [
                     onChildAdded(analyticsRef, updateEvents(catalogId)),

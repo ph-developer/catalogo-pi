@@ -1,4 +1,3 @@
-import {Catalog} from "@/types/catalog";
 import {useMemo, useRef, useState} from "react";
 import moment from "moment/moment";
 import {useAnalytics} from "@/hooks/use-analytics.ts";
@@ -7,35 +6,27 @@ import {Button} from "@/components/ui/button.tsx";
 import {cn} from "@/lib/utils.ts";
 import {useResizeScreen} from "@/hooks/use-resize-screen.ts";
 import {CatalogViewEvent} from "@/types/analytics";
+import {chartColors} from "@/components/partials/dashboard/dashboard/charts/chart-colors.ts";
 
 interface Props {
-    catalogIds?: string[]
-    catalogs: Catalog[]
+    catalogId: string
     className?: string
 }
 
 interface ChartData {
-    [catalogId: string]: number | string
     label: string
+    views: number
+    visitors: number
 }
 
-const chartColors = [
-    '#818cf8',
-    '#34d399',
-    '#fb7185',
-    '#fbbf24',
-    '#22d3ee',
-    '#e879f9'
-]
-
-export const CatalogVisitorsCardChart = ({catalogIds, catalogs, className = ''}: Props) => {
-    const {catalogViewEvents, filterEventsByPeriod, filterEventsByKeys} = useAnalytics(catalogIds)
+export const CatalogViewsAndVisitorsCardChart = ({catalogId, className = ''}: Props) => {
+    const {catalogViewEvents, filterEventsByPeriod, filterEventsByKeys} = useAnalytics(catalogId)
     const divRef = useRef<HTMLDivElement | null>(null)
     const [days, setDays] = useState<number>(7)
     const [chartWidth, setChartWidth] = useState<number>(0)
 
-    const chartData = useMemo<ChartData[]>(() => {
-        if (!catalogIds) return []
+    const chartData = useMemo(() => {
+        if (!catalogId) return []
 
         const keyFormat = days === 1 ? 'DD/MM/YYYY HH' : 'DD/MM/YYYY'
         const period = days === 1 ? 24 : days
@@ -43,21 +34,27 @@ export const CatalogVisitorsCardChart = ({catalogIds, catalogs, className = ''}:
         const subtractType = days === 1 ? 'hours' : 'days'
         const data: { [label: string]: ChartData } = {}
 
-        let events: CatalogViewEvent[] = filterEventsByPeriod(catalogViewEvents, days)
-        events = filterEventsByKeys(events, (event) => [
-            moment(new Date(event.date)).format(keyFormat), event.catalogId, event.clientIdentifier
+        const events: CatalogViewEvent[] = filterEventsByPeriod(catalogViewEvents, days)
+        const viewEvents = events
+        const visitorEvents = filterEventsByKeys(events, (event) => [
+            moment(new Date(event.date)).format(keyFormat), event.clientIdentifier
         ])
+
         for (let i = 0; i < period; i++) {
             const label = moment().subtract(i, subtractType).format(labelFormat)
-            data[label] = {label, ...Object.fromEntries(catalogIds.map(catalogId => [catalogId, 0]))}
+            data[label] = {label, views: 0, visitors: 0}
         }
-        events.forEach((event) => {
+        viewEvents.forEach((event) => {
             const label = moment(new Date(event.date)).format(labelFormat)
-            if (typeof data[label][event.catalogId] === 'number') (data[label][event.catalogId] as number)++
+            data[label].views++
+        })
+        visitorEvents.forEach((event) => {
+            const label = moment(new Date(event.date)).format(labelFormat)
+            data[label].visitors++
         })
 
         return Object.values(data).reverse()
-    }, [catalogIds, days, catalogViewEvents])
+    }, [catalogId, days, catalogViewEvents])
 
     useResizeScreen(() => {
         const divWidth = divRef.current?.clientWidth
@@ -71,7 +68,7 @@ export const CatalogVisitorsCardChart = ({catalogIds, catalogs, className = ''}:
                 ref={divRef}
             >
                 <div className="flex items-center justify-center w-full font-bold pb-2">
-                    Visitantes
+                    Visualizações e Visitantes
                 </div>
                 <div className="flex flex-wrap w-full justify-end px-4 pb-2">
                     {[1, 7, 15, 30].map((periodInDays) => (
@@ -85,21 +82,14 @@ export const CatalogVisitorsCardChart = ({catalogIds, catalogs, className = ''}:
                         </Button>
                     ))}
                 </div>
-                <LineChart width={chartWidth} height={275} data={chartData}>
+                <LineChart width={chartWidth} height={280} data={chartData}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="label" className="text-xs"/>
                     <YAxis className="text-xs" allowDecimals={false}/>
                     <Tooltip labelClassName="text-xs" wrapperClassName="text-xs"/>
                     <Legend wrapperStyle={{fontSize: '0.75rem'}}/>
-                    {catalogIds?.map((catalogId, i) => (
-                        <Line
-                            key={catalogId}
-                            type="monotone"
-                            dataKey={catalogId}
-                            name={catalogs.find((catalog) => catalog.id === catalogId)?.name ?? catalogId}
-                            stroke={chartColors[i % chartColors.length]}
-                        />
-                    ))}
+                    <Line type="monotone" dataKey="views" name="Visualizações" stroke={chartColors[0]}/>
+                    <Line type="monotone" dataKey="visitors" name="Visitantes" stroke={chartColors[1]}/>
                 </LineChart>
             </div>
         </div>

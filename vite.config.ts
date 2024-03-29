@@ -21,6 +21,9 @@ export default defineConfig({
                     'firebase-data': [
                         'firebase/firestore',
                         'firebase/database',
+                    ],
+                    'charts': [
+                        'recharts'
                     ]
                 }
             },

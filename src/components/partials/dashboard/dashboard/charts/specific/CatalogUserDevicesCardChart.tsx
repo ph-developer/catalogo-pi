@@ -1,60 +1,48 @@
-import {Catalog} from "@/types/catalog";
 import {useMemo, useRef, useState} from "react";
 import {useAnalytics} from "@/hooks/use-analytics.ts";
-import {Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis} from "recharts";
+import {Cell, Legend, Pie, PieChart, Tooltip} from "recharts";
 import {Button} from "@/components/ui/button.tsx";
 import {cn} from "@/lib/utils.ts";
 import {useResizeScreen} from "@/hooks/use-resize-screen.ts";
 import {CatalogViewEvent} from "@/types/analytics";
+import {chartColors} from "@/components/partials/dashboard/dashboard/charts/chart-colors.ts";
 
 interface Props {
-    catalogIds?: string[]
-    catalogs: Catalog[]
+    catalogId: string
     className?: string
 }
 
 interface ChartData {
-    catalogName: string
-    desktop: number
-    mobile: number
+    label: string
+    value: number
 }
 
-const chartColors = [
-    '#818cf8',
-    '#34d399',
-    '#fb7185',
-    '#fbbf24',
-    '#22d3ee',
-    '#e879f9'
-]
-
-export const CatalogUserDevicesCardChart = ({catalogIds, catalogs, className = ''}: Props) => {
-    const {catalogViewEvents, filterEventsByPeriod, filterEventsByKeys} = useAnalytics(catalogIds)
+export const CatalogUserDevicesCardChart = ({catalogId, className = ''}: Props) => {
+    const {catalogViewEvents, filterEventsByPeriod, filterEventsByKeys} = useAnalytics(catalogId)
     const divRef = useRef<HTMLDivElement | null>(null)
     const [days, setDays] = useState<number>(7)
     const [chartWidth, setChartWidth] = useState<number>(0)
 
     const chartData = useMemo<ChartData[]>(() => {
-        if (!catalogIds) return []
+        if (!catalogId) return []
 
-        const data: { [catalogId: string]: ChartData } = {}
+        const data: { [device: string]: ChartData } = {
+            'desktop': {label: 'Desktop', value: 0},
+            'mobile': {label: 'Mobile', value: 0}
+        }
 
         let events: CatalogViewEvent[] = filterEventsByPeriod(catalogViewEvents, days)
         events = filterEventsByKeys(events, (event) => [
-            event.catalogId, event.clientIdentifier, event.device
+            event.clientIdentifier, event.device
         ])
-        catalogs.forEach((catalog) => {
-            if (catalog.id) data[catalog.id] = {catalogName: catalog.name, desktop: 0, mobile: 0}
-        })
         events.forEach((event) => {
-            const catalogId = event.catalogId
-            if (data[catalogId] && ['desktop', 'mobile'].includes(event.device)) {
-                data[catalogId][event.device]++
+            if (['desktop', 'mobile'].includes(event.device)) {
+                data[event.device].value++
             }
         })
 
         return Object.values(data)
-    }, [catalogIds, days, catalogViewEvents])
+    }, [catalogId, days, catalogViewEvents])
 
     useResizeScreen(() => {
         const divWidth = divRef.current?.clientWidth
@@ -82,15 +70,15 @@ export const CatalogUserDevicesCardChart = ({catalogIds, catalogs, className = '
                         </Button>
                     ))}
                 </div>
-                <BarChart width={chartWidth} height={280} data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3"/>
-                    <XAxis dataKey="catalogName" className="text-xs"/>
-                    <YAxis className="text-xs" allowDecimals={false}/>
+                <PieChart width={chartWidth} height={280}>
                     <Tooltip labelClassName="text-xs" wrapperClassName="text-xs"/>
                     <Legend wrapperStyle={{fontSize: '0.75rem'}}/>
-                    <Bar dataKey="mobile" fill={chartColors[0]} name="Mobile"/>
-                    <Bar dataKey="desktop" fill={chartColors[1]} name="Desktop"/>
-                </BarChart>
+                    <Pie data={chartData} nameKey="label" dataKey="value" label cx="50%" cy="50%">
+                        {chartData.map((_, i) => (
+                            <Cell key={`chart_devices_${i}`} fill={chartColors[i]}/>
+                        ))}
+                    </Pie>
+                </PieChart>
             </div>
         </div>
     )

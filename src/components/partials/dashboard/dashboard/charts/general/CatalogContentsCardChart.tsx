@@ -3,6 +3,7 @@ import {useMemo, useRef, useState} from "react";
 import {Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis} from "recharts";
 import {cn} from "@/lib/utils.ts";
 import {useResizeScreen} from "@/hooks/use-resize-screen.ts";
+import {chartColors} from "@/components/partials/dashboard/dashboard/charts/chart-colors.ts";
 
 interface Props {
     catalogs: Catalog[]
@@ -14,11 +15,6 @@ interface ChartData {
     products: number
     categories: number
 }
-
-const chartColors = [
-    '#818cf8',
-    '#34d399'
-]
 
 export const CatalogContentsCardChart = ({catalogs, className = ''}: Props) => {
     const divRef = useRef<HTMLDivElement | null>(null)
