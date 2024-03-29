@@ -41,13 +41,13 @@ export const CatalogItem = ({ catalog, categories, product }: Props) => {
     }
 
     return (
-        <Card className="w-auto mx-2 mt-2" style={catalog ? {
+        <Card className="w-auto md:mx-2 mt-2" style={catalog ? {
             backgroundColor: catalog.style.accentColor,
             color: catalog.style.accentTextColor,
             borderColor: colors.getDarkenColor(catalog.style.accentColor, 1.5),
         } : {}}>
-            <CardContent className="flex p-6 space-x-6">
-                <div className="min-w-40 w-40">
+            <CardContent className="flex flex-wrap justify-center md:flex-nowrap p-6 space-x-6">
+                <div className="min-w-40 w-40 mb-6 md:mb-0">
                     <Carousel setApi={setCarouselApi}>
                         <CarouselContent>
                             {product.photos.map((photoId) => (
@@ -74,7 +74,7 @@ export const CatalogItem = ({ catalog, categories, product }: Props) => {
                 <div className="flex flex-col flex-auto space-y-6">
                     <CardTitle>
                         <div className="flex items-center">
-                            <Link className="hover:underline pr-2" to={`/${catalog.url}/${product.id}`}>
+                            <Link className="hover:underline pr-2 line-clamp-1 mr-auto md:mr-0" to={`/${catalog.url}/${product.id}`}>
                                 {product.name}
                             </Link>
                             <TooltipProvider>

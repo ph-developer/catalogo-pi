@@ -2,23 +2,31 @@ import {Button} from "@/components/ui/button.tsx";
 import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 import {chartColors} from "@/components/partials/dashboard/dashboard/charts/chart-colors.ts";
 import {useMemo} from "react";
+import moment from "moment/moment";
 
 export const ExampleChart = () => {
-    const days = useMemo(() => 7, [])
-    const chartData = useMemo(() => [
-        {label: 'Jan', views: 11, visitors: 7},
-        {label: 'Fev', views: 132, visitors: 74},
-        {label: 'Mar', views: 354, visitors: 213},
-        {label: 'Abr', views: 375, visitors: 255},
-        {label: 'Mai', views: 687, visitors: 586},
-        {label: 'Jun', views: 784, visitors: 685},
-        {label: 'Jul', views: 1058, visitors: 814},
-        {label: 'Ago', views: 1254, visitors: 988},
-        {label: 'Set', views: 1688, visitors: 1352},
-        {label: 'Out', views: 2078, visitors: 1758},
-        {label: 'Nov', views: 2155, visitors: 1895},
-        {label: 'Dez', views: 2348, visitors: 1986},
-    ], [])
+    const days = useMemo(() => 15, [])
+    const chartData = useMemo(() => {
+        const currentDate = moment()
+
+        return [
+            {label: currentDate.format('DD/MMM'), views: 2884, visitors: 2587},
+            {label: currentDate.subtract(1, 'days').format('DD/MMM'), views: 2687, visitors: 2311},
+            {label: currentDate.subtract(1, 'days').format('DD/MMM'), views: 2554, visitors: 2213},
+            {label: currentDate.subtract(1, 'days').format('DD/MMM'), views: 2348, visitors: 1986},
+            {label: currentDate.subtract(1, 'days').format('DD/MMM'), views: 2155, visitors: 1895},
+            {label: currentDate.subtract(1, 'days').format('DD/MMM'), views: 2078, visitors: 1758},
+            {label: currentDate.subtract(1, 'days').format('DD/MMM'), views: 1688, visitors: 1352},
+            {label: currentDate.subtract(1, 'days').format('DD/MMM'), views: 1254, visitors: 988},
+            {label: currentDate.subtract(1, 'days').format('DD/MMM'), views: 1058, visitors: 814},
+            {label: currentDate.subtract(1, 'days').format('DD/MMM'), views: 784, visitors: 685},
+            {label: currentDate.subtract(1, 'days').format('DD/MMM'), views: 687, visitors: 586},
+            {label: currentDate.subtract(1, 'days').format('DD/MMM'), views: 375, visitors: 255},
+            {label: currentDate.subtract(1, 'days').format('DD/MMM'), views: 354, visitors: 213},
+            {label: currentDate.subtract(1, 'days').format('DD/MMM'), views: 132, visitors: 74},
+            {label: currentDate.subtract(1, 'days').format('DD/MMM'), views: 11, visitors: 7},
+        ].reverse();
+    }, [])
 
     return (
         <div className='flex w-full h-full p-1'>

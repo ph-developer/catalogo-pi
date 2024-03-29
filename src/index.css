@@ -80,3 +80,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+#fp-nav.fp-right {
+  right: 4px !important;
+  opacity: 0.25 !important;
+}
+
+.fp-watermark {
+  display: none !important;
+}

@@ -13,6 +13,9 @@ import {useBgColor} from "@/hooks/use-bg-color.ts";
 import {useProducts} from "@/hooks/use-products.ts";
 import {useCategories} from "@/hooks/use-categories.ts";
 import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
+import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible.tsx";
+import {Button} from "@/components/ui/button.tsx";
+import {Icons} from "@/components/ui/icons.tsx";
 
 const CatalogPage = () => {
     const {catalogUrl} = useParams()
@@ -23,6 +26,7 @@ const CatalogPage = () => {
         isLoading: isLoadingCategories
     } = useCategories(isLoadingCatalog ? null : (catalog?.categoryIds || []))
     const [categoryFilterIds, setCategoryFilterIds] = useState<string[]>([])
+    const [collapsed, setCollapsed] = useState<boolean>(true)
 
     useBgColor(catalog?.style.bgColor)
     usePageTitle(catalog?.name)
@@ -62,34 +66,68 @@ const CatalogPage = () => {
         }
     }
 
+    const toggleCollapsed = () => setCollapsed(!collapsed)
+
     return (
         <section>
-            <div className="flex pt-6 container mx-auto">
-                <div className="columns-xs min-w-64 max-w-72 p-2 space-y-6">
+            <div className="flex flex-wrap md:flex-nowrap pt-6 container mx-auto">
+                <div
+                    className="flex flex-col flex-wrap columns-xs w-full min-w-64 md:max-w-72 pb-2 md:p-2 space-y-2 md:space-y-6"
+                >
                     {!!catalog.style.banner && (
-                        <CatalogCompanyBanner
-                            catalog={catalog}
-                        />
+                        <CatalogCompanyBanner catalog={catalog}/>
                     )}
 
-                    <CatalogCompanyInfo catalog={catalog}/>
+                    <Collapsible open={!collapsed} onOpenChange={toggleCollapsed} className="md:hidden">
+                        <div className="flex justify-end w-full">
+                            <CollapsibleTrigger asChild>
+                                <Button className="h-7 p-2 w-12" variant="outline" onClick={toggleCollapsed}>
+                                    <Icons.menu className="w-3 h-3"/>
+                                </Button>
+                            </CollapsibleTrigger>
+                        </div>
+                        <CollapsibleContent className="space-y-6">
+                            <CatalogCompanyInfo catalog={catalog}/>
 
-                    {!!categoryFilterIds.length && (
-                        <CatalogCategoryFilters
-                            catalog={catalog}
-                            categories={categoryFilters}
-                            onCategoryClick={removeCategoryFilter}
-                        />
-                    )}
+                            {!!categoryFilterIds.length && (
+                                <CatalogCategoryFilters
+                                    catalog={catalog}
+                                    categories={categoryFilters}
+                                    onCategoryClick={removeCategoryFilter}
+                                />
+                            )}
 
-                    {!!categories?.length && (
-                        <CatalogCategories
-                            catalog={catalog}
-                            products={filteredProducts}
-                            categories={categories}
-                            onCategoryClick={addCategoryFilter}
-                        />
-                    )}
+                            {!!categories?.length && (
+                                <CatalogCategories
+                                    catalog={catalog}
+                                    products={filteredProducts}
+                                    categories={categories}
+                                    onCategoryClick={addCategoryFilter}
+                                />
+                            )}
+                        </CollapsibleContent>
+                    </Collapsible>
+
+                    <div className="md:flex flex-col flex-wrap w-full space-y-6 hidden md:visible">
+                        <CatalogCompanyInfo catalog={catalog}/>
+
+                        {!!categoryFilterIds.length && (
+                            <CatalogCategoryFilters
+                                catalog={catalog}
+                                categories={categoryFilters}
+                                onCategoryClick={removeCategoryFilter}
+                            />
+                        )}
+
+                        {!!categories?.length && (
+                            <CatalogCategories
+                                catalog={catalog}
+                                products={filteredProducts}
+                                categories={categories}
+                                onCategoryClick={addCategoryFilter}
+                            />
+                        )}
+                    </div>
                 </div>
                 <div className="flex flex-col w-full pb-6">
                     {filteredProducts.map((product) => (

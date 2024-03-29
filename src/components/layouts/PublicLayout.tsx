@@ -4,10 +4,13 @@ import {Icons} from "@/components/ui/icons"
 import {colors} from "@/lib/colors.ts";
 import {useCatalog} from "@/hooks/use-catalog.ts";
 import {LoaderDimmer} from "@/components/partials/LoaderDimmer.tsx";
+import {useMedia} from "@/hooks/use-media.ts";
+import {cn} from "@/lib/utils.ts";
 
 const PublicLayout = () => {
     const {catalogUrl} = useParams()
     const {catalog, isLoading} = useCatalog('url', catalogUrl)
+    const {breakpoint} = useMedia()
 
     if (catalogUrl && isLoading) return <LoaderDimmer/>
 
@@ -25,13 +28,15 @@ const PublicLayout = () => {
                         </Link>
                     </div>
                     <div className="ml-auto flex items-center space-x-2 mr-2">
-                        <Button variant="ghost" className='ml-auto' asChild style={catalog ? {
+                        <Button variant="ghost" className='ml-auto px-0 md:px-4' asChild style={catalog ? {
                             backgroundColor: catalog.style.accentColor,
                             color: catalog.style.accentTextColor,
                         } : {}}>
                             <Link to='/login'>
-                                <Icons.dash className='h-4 w-4 mr-2'/>
-                                Dashboard
+                                <Icons.dash className='h-4 w-4 md:mr-2'/>
+                                <span className={cn({
+                                    'hidden': ['xs', 'sm'].includes(breakpoint)
+                                })}>Dashboard</span>
                             </Link>
                         </Button>
                     </div>
