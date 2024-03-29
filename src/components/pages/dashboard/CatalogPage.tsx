@@ -132,7 +132,7 @@ const CatalogPage = () => {
 
     return (
         <section>
-            <div className="flex flex-col pt-6 container mx-auto">
+            <div className="flex flex-col pt-6 pb-6 container mx-auto">
                 <div className="flex items-center">
                     <div className="font-semibold mr-2">
                         {catalog?.name}

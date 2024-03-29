@@ -75,7 +75,7 @@ const CatalogsPage = () => {
 
     return (
         <section>
-            <div className="flex flex-col pt-6 container mx-auto">
+            <div className="flex flex-col pt-6 pb-6 container mx-auto">
                 <div className="flex justify-end py-2">
                     <EditCatalogDialog onSaveCatalog={onSaveCatalog}>
                         <Button className="text-sm">
