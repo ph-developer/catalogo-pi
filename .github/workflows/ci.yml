@@ -16,8 +16,10 @@ jobs:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
     steps:
-      - name: Build Website
+      - name: Get Repository
         uses: actions/checkout@v4
+
+      - name: Build Website
         run: npm run build
 
       - name: Deploy Preview to Firebase Hosting
