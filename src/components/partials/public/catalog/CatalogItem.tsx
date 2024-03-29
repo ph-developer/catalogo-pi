@@ -10,6 +10,9 @@ import {useStorage} from "@/hooks/use-storage.ts";
 import {mapProductCategories} from "@/mappers/map-product-categories.ts";
 import {Category} from "@/types/category";
 import {Link} from "react-router-dom";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip.tsx";
+import {Icons} from "@/components/ui/icons.tsx";
+import {makeWhatsappUrl} from "@/lib/whatsapp.ts";
 
 interface Props {
     catalog: Catalog
@@ -29,6 +32,13 @@ export const CatalogItem = ({ catalog, categories, product }: Props) => {
             setCurrentImg(carouselApi.selectedScrollSnap())
         })
     }, [carouselApi])
+
+    const openWhatsapp = () => {
+        const productUrl = `${window.location.origin}/${catalog.url}/${product.id}`
+        const text = `Olá, tenho interesse em adquirir o produto "${product.name}". (${productUrl})`
+        const url = makeWhatsappUrl(catalog.whatsapp, text)
+        window.open(url)
+    }
 
     return (
         <Card className="w-auto mx-2 mt-2" style={catalog ? {
@@ -63,9 +73,26 @@ export const CatalogItem = ({ catalog, categories, product }: Props) => {
                 </div>
                 <div className="flex flex-col flex-auto space-y-6">
                     <CardTitle>
-                        <Link className="hover:underline" to={`/${catalog.url}/${product.id}`}>
-                            {product.name}
-                        </Link>
+                        <div className="flex items-center">
+                            <Link className="hover:underline pr-2" to={`/${catalog.url}/${product.id}`}>
+                                {product.name}
+                            </Link>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <span>
+                                            <Icons.whatsapp
+                                                className="w-3.5 h-3.5 cursor-pointer fill-[#25d366]"
+                                                onClick={openWhatsapp}
+                                            />
+                                        </span>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Chamar no WhatsApp</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        </div>
                     </CardTitle>
                     <p className="text-sm min-h-20 line-clamp-4 text-justify whitespace-break-spaces">
                         {product.description}
