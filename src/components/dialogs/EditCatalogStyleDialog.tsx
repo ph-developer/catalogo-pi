@@ -20,6 +20,7 @@ import {HexColorPicker} from "react-colorful";
 import {Input} from "@/components/ui/input.tsx";
 import {cn} from "@/lib/utils.ts";
 import {useNotifications} from "@/hooks/use-notifications.tsx";
+import {colors} from "@/lib/colors.ts";
 
 interface Props {
     children: ReactElement
@@ -37,9 +38,9 @@ export const EditCatalogStyleDialog = ({children, catalog, onSaveStyle}: Props) 
     const [banner, setBanner] = useState<string | null>(catalog.style.banner)
     const [bannerDominantColor, setBannerDominantColor] = useState<string | null>(catalog.style.bannerDominantColor)
     const [bgColor, setBgColor] = useState<string>(catalog.style.bgColor || '#f8fafc')
-    const [bgTextColor, setBgTextColor] = useState<string>(catalog.style.bgTextColor || '#000')
-    const [accentColor, setAccentColor] = useState<string>(catalog.style.accentColor || '#fff')
-    const [accentTextColor, setAccentTextColor] = useState<string>(catalog.style.accentTextColor || '#000')
+    const [bgTextColor, setBgTextColor] = useState<string>(catalog.style.bgTextColor || '#000000')
+    const [accentColor, setAccentColor] = useState<string>(catalog.style.accentColor || '#ffffff')
+    const [accentTextColor, setAccentTextColor] = useState<string>(catalog.style.accentTextColor || '#000000')
     const [colorSelector, setColorSelector] = useState<ColorSelector>('bgColor')
     const [currentSelectorColor, setCurrentSelectorColor] = useState<string>(bgColor)
 
@@ -48,9 +49,9 @@ export const EditCatalogStyleDialog = ({children, catalog, onSaveStyle}: Props) 
             setBanner(catalog.style.banner)
             setBannerDominantColor(catalog.style.bannerDominantColor)
             setBgColor(catalog.style.bgColor || '#f8fafc')
-            setBgTextColor(catalog.style.bgTextColor || '#000')
-            setAccentColor(catalog.style.accentColor || '#fff')
-            setAccentTextColor(catalog.style.accentTextColor || '#000')
+            setBgTextColor(catalog.style.bgTextColor || '#000000')
+            setAccentColor(catalog.style.accentColor || '#ffffff')
+            setAccentTextColor(catalog.style.accentTextColor || '#000000')
             setColorSelector('bgColor')
             setCurrentSelectorColor(bgColor)
         }
@@ -186,6 +187,45 @@ export const EditCatalogStyleDialog = ({children, catalog, onSaveStyle}: Props) 
                                         <div className="h-4 w-4 rounded mr-2 border border-black" style={{backgroundColor: accentTextColor}}/>
                                         Cor do Texto (Realçe)
                                     </Badge>
+                                    <div className="flex flex-col space-y-2 pt-6">
+                                        <Label>Sugestões</Label>
+                                        <div className="flex flex-wrap">
+                                            {bannerDominantColor ? (
+                                                <div
+                                                    className="h-4 w-4 rounded mr-2 border border-black cursor-pointer"
+                                                    style={{backgroundColor: bannerDominantColor}}
+                                                    onClick={() => setCurrentSelectorColor(bannerDominantColor)}
+                                                />
+                                            ) : (
+                                                <div
+                                                    className="h-4 w-4 rounded mr-2 border border-black cursor-pointer"
+                                                    style={{backgroundColor: '#f8fafc'}}
+                                                    onClick={() => setCurrentSelectorColor('#f8fafc')}
+                                                />
+                                            )}
+                                            {!!bannerDominantColor && (
+                                                <div
+                                                    className="h-4 w-4 rounded mr-2 border border-black cursor-pointer"
+                                                    style={{backgroundColor: colors.getDarkenColor(bannerDominantColor, 10)}}
+                                                    onClick={() => setCurrentSelectorColor(colors.getDarkenColor(bannerDominantColor, 10))}
+                                                />
+                                            )}
+                                            {bannerDominantColor !== '#ffffff' && (
+                                                <div
+                                                    className="h-4 w-4 rounded mr-2 border border-black cursor-pointer"
+                                                    style={{backgroundColor: '#ffffff'}}
+                                                    onClick={() => setCurrentSelectorColor('#ffffff')}
+                                                />
+                                            )}
+                                            {bannerDominantColor !== '#000000' && (
+                                                <div
+                                                    className="h-4 w-4 rounded mr-2 border border-black cursor-pointer"
+                                                    style={{backgroundColor: '#000000'}}
+                                                    onClick={() => setCurrentSelectorColor('#000000')}
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="flex w-fit space-x-2">
                                     <div className="relative w-[200px]">

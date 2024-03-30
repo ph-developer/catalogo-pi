@@ -23,7 +23,8 @@ export const ImgInput = ({id, onSelectImage, disabled = false, className = 'h-48
         const file = e.target.files?.item(0) || null
         if (file) {
             const fileUrl = '' + URL.createObjectURL(file)
-            const dominantColor = await colors.getDominantColor(fileUrl)
+            let dominantColor = await colors.getDominantColor(fileUrl)
+            if (file.type === 'image/png' && dominantColor === '#000000') dominantColor = null
             if (inputRef.current) inputRef.current.value = ''
             await onSelectImage(fileUrl, dominantColor)
         }
